@@ -3,314 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Révisions PMM - Belfort</title>
+    <title>Révision PMM - Randomisée</title>
     <style>
         :root {
             --navy-blue: #0f1e3d;
-            --gold: #c5b358;
+            --gold: #c5a059;
             --white: #ffffff;
-            --light-gray: #f4f4f4;
+            --light-grey: #eef2f5;
+            --red: #b30000;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--light-gray);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--light-grey); color: #333; }
 
         header {
-            background-color: var(--navy-blue);
+            background: linear-gradient(135deg, var(--navy-blue), #162c5b);
             color: var(--white);
-            width: 100%;
-            padding: 1rem 0;
+            padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 4px solid var(--gold);
         }
 
-        h1 { margin: 0; font-size: 1.8rem; }
-        .subtitle { color: var(--gold); font-size: 0.9rem; margin-top: 5px; }
-
-        /* Navigation */
         nav {
             display: flex;
+            justify-content: center;
+            background: #12244a;
             flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
-            padding: 0 10px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        button {
-            background-color: var(--white);
-            border: 2px solid var(--navy-blue);
-            color: var(--navy-blue);
-            padding: 10px 20px;
+        nav button {
+            background: none;
+            border: none;
+            color: #ccc;
+            padding: 15px 15px;
             cursor: pointer;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            border-bottom: 3px solid transparent;
         }
 
-        button:hover, button.active {
-            background-color: var(--navy-blue);
-            color: var(--gold);
+        nav button:hover, nav button.active {
+            color: var(--white);
+            background: rgba(255,255,255,0.05);
+            border-bottom: 3px solid var(--gold);
         }
 
-        /* Carte de Quiz */
-        .quiz-card {
-            background: white;
+        main {
+            max-width: 900px;
+            margin: 20px auto;
+            background: var(--white);
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .image-container {
-            width: 100%;
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #eee;
             border-radius: 8px;
-            margin-bottom: 20px;
-            overflow: hidden;
-            border: 1px solid #ddd;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            min-height: 60vh;
         }
 
-        .image-container img {
+        .section-content { display: none; }
+        .section-content.active { display: block; }
+
+        h2 { color: var(--navy-blue); border-left: 5px solid var(--red); padding-left: 15px; margin-top: 0; }
+        h3 { color: #555; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; }
+
+        /* QUIZ STYLES */
+        .question-card { background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef; margin-bottom: 20px; }
+        .question-text { font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; color: var(--navy-blue); text-align: center; }
+        
+        .quiz-image {
             max-width: 100%;
-            max-height: 100%;
+            height: auto;
+            max-height: 250px;
+            display: block;
+            margin: 0 auto 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #eee;
             object-fit: contain;
         }
+        
+        .flag-quiz-img { max-height: 150px; border: 1px solid #999; }
 
-        .answer-box {
-            margin-top: 15px;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        @media(max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
 
-        .hidden-answer {
-            background-color: #ddd;
-            color: transparent;
-            user-select: none;
-            cursor: pointer;
-            padding: 10px 20px;
-            border-radius: 5px;
-            width: 80%;
-        }
-
-        .revealed-answer {
-            background-color: var(--gold);
-            color: var(--navy-blue);
-            font-weight: bold;
-            font-size: 1.2rem;
-            padding: 10px 20px;
-            border-radius: 5px;
-            width: 80%;
-            animation: fadeIn 0.3s;
-        }
-
-        .controls {
-            margin-top: 20px;
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .btn-action {
-            background-color: var(--navy-blue);
-            color: white;
-            border: none;
-            padding: 12px 25px;
+        button.opt-btn {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            background: var(--white);
+            border-radius: 4px;
             font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 500;
+            transition: 0.2s;
         }
+        button.opt-btn:hover:not(:disabled) { border-color: var(--navy-blue); background: #f0f4ff; }
+        button.opt-btn:disabled { opacity: 0.7; cursor: default; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .feedback-box { margin-top: 15px; padding: 15px; border-radius: 4px; display: none; text-align: center; }
+        .btn-next { background: var(--navy-blue); color: white; border: none; padding: 12px 30px; border-radius: 30px; margin: 15px auto 0 auto; cursor: pointer; display: block; font-weight: bold; }
 
-        footer {
-            margin-top: auto;
-            padding: 20px;
-            font-size: 0.8rem;
-            color: #666;
-        }
+        /* TRADUCTION */
+        .translation-zone { background: #eef2f5; padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .nato-input { width: 100%; padding: 12px; font-size: 1.1rem; border: 2px solid #ccc; border-radius: 4px; margin-bottom: 15px; box-sizing: border-box; }
+        .nato-output { background: #1a2f55; padding: 15px; border-radius: 6px; min-height: 60px; display: flex; flex-wrap: wrap; gap: 10px; color: #fff; }
+        .nato-item { display: flex; align-items: center; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 4px; font-family: monospace; font-weight: bold; }
+        .flag-icon-small { height: 25px; margin-right: 8px; border: 1px solid #555; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Révisions PMM Belfort</h1>
-    <div class="subtitle">Entraînement : Grades, Navires, Pavillons, FAMAS</div>
+    <h1>PMM - Révision Marine Nationale</h1>
 </header>
 
 <nav>
-    <button onclick="setMode('grades')" id="btn-grades" class="active">Grades</button>
-    <button onclick="setMode('navires')" id="btn-navires">Navires</button>
-    <button onclick="setMode('pavillons')" id="btn-pavillons">Pavillons</button>
-    <button onclick="setMode('famas')" id="btn-famas">FAMAS</button>
+    <button onclick="switchTab('grades')" class="active">Grades</button>
+    <button onclick="switchTab('navires')">Navires</button>
+    <button onclick="switchTab('nato')">Drapeaux</button>
+    <button onclick="switchTab('famas')">FAMAS</button>
 </nav>
 
-<main class="quiz-card">
-    <h2 id="category-title">Grades</h2>
-    
-    <div class="image-container">
-        <img id="quiz-image" src="" alt="Quiz Image">
+<main>
+    <div id="grades" class="section-content active">
+        <h2>Connaissance des Grades</h2>
+        <div id="quiz-grades" class="quiz-area"></div>
     </div>
 
-    <div class="answer-box" onclick="revealAnswer()">
-        <div id="answer-text" class="hidden-answer">Cliquez pour voir la réponse</div>
+    <div id="navires" class="section-content">
+        <h2>Types de Navires</h2>
+        <div id="quiz-navires" class="quiz-area"></div>
     </div>
 
-    <div class="controls">
-        <button class="btn-action" onclick="nextQuestion()">Suivant ➔</button>
+    <div id="nato" class="section-content">
+        <h2>Code International</h2>
+        <div id="quiz-nato" class="quiz-area"></div>
+        <div class="translation-zone">
+            <h3>Traducteur</h3>
+            <input type="text" class="nato-input" placeholder="Tapez un message..." oninput="translateNato(this.value)">
+            <div class="nato-output" id="nato-res"></div>
+        </div>
+    </div>
+
+    <div id="famas" class="section-content">
+        <h2>FAMAS</h2>
+        <div id="quiz-famas" class="quiz-area"></div>
     </div>
 </main>
 
-<footer>
-    PMM Belfort - Outil de révision
-</footer>
-
 <script>
-    // --- DONNÉES (Basées sur tes fichiers) ---
+    // ================= BASE DE DONNÉES =================
+    // Note : L'index 'a' indique la bonne réponse DANS LA LISTE 'options' D'ORIGINE.
+    // Le code JS se charge ensuite de tout mélanger à l'affichage.
     
-    const data = {
+    const db = {
         grades: [
-            { name: "Amiral", img: "images/grade_amiral.jpg" },
-            { name: "Aspirant (ASP)", img: "images/grade_asp.jpg" },
-            { name: "Contre-Amiral (CA)", img: "images/grade_ca.jpg" },
-            { name: "Capitaine de Corvette (CC)", img: "images/grade_cc.jpg" },
-            { name: "Capitaine de Frégate (CF)", img: "images/grade_cf.jpg" },
-            { name: "Capitaine de Vaisseau (CV)", img: "images/grade_cv.jpg" },
-            { name: "Enseigne de Vaisseau 1ère classe (EV1)", img: "images/grade_ev1.jpg" },
-            { name: "Enseigne de Vaisseau 2ème classe (EV2)", img: "images/grade_ev2.jpg" },
-            { name: "Lieutenant de Vaisseau (LV)", img: "images/grade_lv.jpg" },
-            { name: "Matelot", img: "images/grade_matelot.jpg" },
-            { name: "Major", img: "images/grade_major.jpg" },
-            { name: "Maître Principal (MP)", img: "images/grade_mp.jpg" },
-            { name: "Maître (M)", img: "images/grade_m.jpg" },
-            { name: "Premier Maître (PM)", img: "images/grade_pm.jpg" },
-            { name: "Quartier Maître 1ère classe (QM1)", img: "images/grade_qm1.jpg" },
-            { name: "Quartier Maître 2ème classe (QM2)", img: "images/grade_qm2.jpg" },
-            { name: "Second Maître (SM)", img: "images/grade_sm.jpg" },
-            { name: "Second Maître Breveté", img: "images/grade_sm_brevete.jpg" },
-            { name: "Second Maître Maistrancier", img: "images/grade_sm_maistrancier.jpg" },
-            { name: "Vice-Amiral (VA)", img: "images/grade_va.jpg" },
-            { name: "Vice-Amiral d'Escadre (VAE)", img: "images/grade_vae.jpg" }
+            // --- EQUIPAGES ---
+            { img: "images/grade_matelot.jpg", q: "Quel est ce grade ?", options: ["Matelot", "Quartier-Maître de 2ème classe", "Mousse"], a: 0, info: "Pas de galon = Matelot." },
+            { img: "images/grade_qm2.jpg", q: "Quel est ce grade ?", options: ["Matelot", "Quartier-Maître de 2ème classe", "Quartier-Maître de 1ère classe"], a: 1, info: "2 chevrons rouges = Quartier-Maître de 2ème classe." },
+            { img: "images/grade_qm1.jpg", q: "Quel est ce grade ?", options: ["Quartier-Maître de 2ème classe", "Quartier-Maître de 1ère classe", "Second Maître"], a: 1, info: "1 chevron rouge = Quartier-Maître de 1ère classe." },
+            
+            // --- ÉLÈVES MAISTRANCIERS ---
+            { img: "images/grade_sm_maistrancier.jpg", q: "Quel est ce grade (barré de rouge) ?", options: ["Second Maître Maistrancier", "Second Maître", "Quartier-Maître"], a: 0, info: "Second Maître Maistrancier. Appellation : 'élève maistrancier'." },
+            { img: "images/grade_sm_brevete.jpg", q: "Quel est ce grade (barré de bleu) ?", options: ["Second Maître Maistrancier", "Second Maître Breveté Maistrancier", "Maître"], a: 1, info: "Second Maître Breveté Maistrancier. Appellation : 'second maître maistrancier'." },
+
+            // --- OFFICIERS MARINIERS ---
+            { img: "images/grade_sm.jpg", q: "Quel est ce grade ?", options: ["Second Maître", "Maître", "Premier Maître"], a: 0, info: "2 chevrons or = Second Maître. (Appellation : 'Maître')." },
+            { img: "images/grade_m.jpg", q: "Quel est ce grade ?", options: ["Second Maître", "Maître", "Premier Maître"], a: 1, info: "3 chevrons or = Maître." },
+            { img: "images/grade_pm.jpg", q: "Quel est ce grade ?", options: ["Maître", "Premier Maître", "Maître Principal"], a: 1, info: "1 galon or = Premier Maître." },
+            { img: "images/grade_mp.jpg", q: "Quel est ce grade ?", options: ["Premier Maître", "Maître Principal", "Major"], a: 1, info: "1 galon or 'sabordé' (avec filet argent) = Maître Principal. (Appellation : 'Cipal')." },
+            { img: "images/grade_major.jpg", q: "Quel est ce grade ?", options: ["Maître Principal", "Major", "Aspirant"], a: 1, info: "1 galon or surmonté d'une ancre = Major. (Appellation : 'Major')." },
+
+            // --- OFFICIERS SUBALTERNES ---
+            { img: "images/grade_asp.jpg", q: "Quel est ce grade ?", options: ["Aspirant", "Enseigne de Vaisseau de 2ème classe", "Enseigne de Vaisseau de 1ère classe"], a: 0, info: "1 galon or coupé de 3 interruptions = Aspirant. (Appellation : 'Lieutenant')." },
+            { img: "images/grade_ev2.jpg", q: "Quel est ce grade ?", options: ["Aspirant", "Enseigne de Vaisseau de 2ème classe", "Enseigne de Vaisseau de 1ère classe"], a: 1, info: "1 galon or = Enseigne de Vaisseau de 2ème classe." },
+            { img: "images/grade_ev1.jpg", q: "Quel est ce grade ?", options: ["Enseigne de Vaisseau de 2ème classe", "Enseigne de Vaisseau de 1ère classe", "Lieutenant de Vaisseau"], a: 1, info: "2 galons or = Enseigne de Vaisseau de 1ère classe." },
+            { img: "images/grade_lv.jpg", q: "Quel est ce grade ?", options: ["Enseigne de Vaisseau de 1ère classe", "Lieutenant de Vaisseau", "Capitaine de Corvette"], a: 1, info: "3 galons or = Lieutenant de Vaisseau. (Appellation : 'Capitaine')." },
+
+            // --- OFFICIERS SUPÉRIEURS ---
+            { img: "images/grade_cc.jpg", q: "Quel est ce grade ?", options: ["Lieutenant de Vaisseau", "Capitaine de Corvette", "Capitaine de Frégate"], a: 1, info: "4 galons panachés (Or et Argent) = Capitaine de Corvette. (Appellation : 'Commandant')." },
+            { img: "images/grade_cf.jpg", q: "Quel est ce grade ?", options: ["Capitaine de Corvette", "Capitaine de Frégate", "Capitaine de Vaisseau"], a: 1, info: "5 galons panachés (3 Or, 2 Argent) = Capitaine de Frégate. (Appellation : 'Commandant')." },
+            { img: "images/grade_cv.jpg", q: "Quel est ce grade ?", options: ["Capitaine de Frégate", "Capitaine de Vaisseau", "Contre-Amiral"], a: 1, info: "5 galons or = Capitaine de Vaisseau. (Appellation : 'Commandant')." },
+
+            // --- OFFICIERS GÉNÉRAUX ---
+            { img: "images/grade_ca.jpg", q: "Quel est ce grade ?", options: ["Capitaine de Vaisseau", "Contre-Amiral", "Vice-Amiral"], a: 1, info: "2 étoiles = Contre-Amiral." },
+            { img: "images/grade_va.jpg", q: "Quel est ce grade ?", options: ["Contre-Amiral", "Vice-Amiral", "Vice-Amiral d'Escadre"], a: 1, info: "3 étoiles = Vice-Amiral." },
+            { img: "images/grade_vae.jpg", q: "Quel est ce grade ?", options: ["Vice-Amiral", "Vice-Amiral d'Escadre", "Amiral"], a: 1, info: "4 étoiles = Vice-Amiral d'Escadre." },
+            { img: "images/grade_amiral.jpg", q: "Quel est ce grade ?", options: ["Vice-Amiral d'Escadre", "Amiral", "Amiral de France"], a: 1, info: "5 étoiles = Amiral." }
         ],
+
         navires: [
-            { name: "BBPD (Bâtiment Base de Plongeurs Démineurs)", img: "images/navire_bbpd.jpg" },
-            { name: "BCR (Bâtiment de Commandement et de Ravitaillement)", img: "images/navire_bcr.jpg" },
-            { name: "BEGM (Bâtiment d'Essais et de Mesures)", img: "images/navire_begm.jpg" },
-            { name: "BHO (Bâtiment Hydrographique)", img: "images/navire_bho.jpg" },
-            { name: "BRF (Bâtiment Ravitailleur de Forces)", img: "images/navire_brf.jpg" },
-            { name: "BSAM (Bâtiment de Soutien et d'Assistance Métropolitain)", img: "images/navire_bsam.jpg" },
-            { name: "BSAOM (Bâtiment de Soutien et d'Assistance Outre-Mer)", img: "images/navire_bsaom.jpg" },
-            { name: "Chasseur de Mines Tripartite (CMT)", img: "images/navire_cmt.jpg" },
-            { name: "EDA (Engin de Débarquement Amphibie)", img: "images/navire_eda.jpg" },
-            { name: "FDA (Frégate de Défense Aérienne)", img: "images/navire_fda.jpg" },
-            { name: "FDI (Frégate de Défense et d'Intervention)", img: "images/navire_fdi.jpg" },
-            { name: "FLF (Frégate type La Fayette)", img: "images/navire_flf.jpg" },
-            { name: "FREMM (Frégate Multi-Missions)", img: "images/navire_fremm.jpg" },
-            { name: "FREMM DA (Défense Aérienne)", img: "images/navire_fremm_da.jpg" },
-            { name: "FS (Frégate de Surveillance)", img: "images/navire_fs.jpg" },
-            { name: "Porte-Avions (Charles de Gaulle)", img: "images/navire_pa.jpg" },
-            { name: "PAG (Patrouilleur Antilles Guyane)", img: "images/navire_pag.jpg" },
-            { name: "Patrouilleur", img: "images/navire_patrouilleur.jpg" },
-            { name: "PHA (Porte-Hélicoptères Amphibie)", img: "images/navire_pha.jpg" },
-            { name: "PHM (Patrouilleur de Haute Mer)", img: "images/navire_phm.jpg" },
-            { name: "Navire Polaire (Astrolabe)", img: "images/navire_polaire.jpg" },
-            { name: "POM (Patrouilleur Outre-Mer)", img: "images/navire_pom.jpg" },
-            { name: "PSP (Patrouilleur de Service Public)", img: "images/navire_psp.jpg" },
-            { name: "RPC (Remorqueur Portuaire Côtier)", img: "images/navire_rpc.jpg" },
-            { name: "Voilier École", img: "images/navire_voilier.jpg" }
+            { img: "images/navire_pa.jpg", q: "Type de bâtiment ?", options: ["Porte-Avions", "Porte-Hélicoptères Amphibie", "Bâtiment Ravitailleur"], a: 0, info: "Porte-Avions (Charles de Gaulle)." },
+            { img: "images/navire_fremm.jpg", q: "Type de bâtiment ?", options: ["Frégate de Surveillance", "Frégate Multi-Missions", "Patrouilleur de Haute Mer"], a: 1, info: "Frégate Multi-Missions (FREMM)." },
+            { img: "images/navire_fremm_da.jpg", q: "Type de bâtiment ?", options: ["Frégate de Défense Aérienne", "Frégate Type La Fayette", "Patrouilleur"], a: 0, info: "Frégate de Défense Aérienne (FREMM DA / FDA)." },
+            { img: "images/navire_fdi.jpg", q: "Type de bâtiment ?", options: ["Frégate de Défense et d'Intervention", "Frégate de Surveillance", "Chasseur de Mines"], a: 0, info: "Frégate de Défense et d'Intervention (FDI)." },
+            { img: "images/navire_fs.jpg", q: "Type de bâtiment ?", options: ["Frégate de Surveillance", "Patrouilleur Polaire", "Bâtiment Hydrographique"], a: 0, info: "Frégate de Surveillance (Floréal)." },
+            { img: "images/navire_phm.jpg", q: "Type de bâtiment ?", options: ["Patrouilleur de Haute Mer", "Patrouilleur Côtier", "Chasseur de Mines"], a: 0, info: "Patrouilleur de Haute Mer (PHM)." },
+            { img: "images/navire_pom.jpg", q: "Type de bâtiment ?", options: ["Patrouilleur Outre-Mer", "Patrouilleur de Service Public", "Bâtiment de Soutien"], a: 0, info: "Patrouilleur Outre-Mer (POM)." },
+            { img: "images/navire_pag.jpg", q: "Type de bâtiment ?", options: ["Patrouilleur Antilles Guyane", "Patrouilleur de Haute Mer", "Remorqueur"], a: 0, info: "Patrouilleur Antilles Guyane (PAG)." },
+            { img: "images/navire_psp.jpg", q: "Type de bâtiment ?", options: ["Patrouilleur de Service Public", "Bâtiment Base de Plongeurs", "Engin de Débarquement"], a: 0, info: "Patrouilleur de Service Public (PSP)." },
+            { img: "images/navire_patrouilleur.jpg", q: "Type de bâtiment ?", options: ["Patrouilleur", "Frégate", "Porte-Avions"], a: 0, info: "Patrouilleur (Divers)." },
+            { img: "images/navire_polaire.jpg", q: "Type de bâtiment ?", options: ["Patrouilleur Polaire", "Pétrolier Ravitailleur", "Bâtiment d'Essais"], a: 0, info: "Patrouilleur Polaire (L'Astrolabe)." },
+            { img: "images/navire_cmt.jpg", q: "Type de bâtiment ?", options: ["Chasseur de Mines Tripartite", "Patrouilleur", "Remorqueur"], a: 0, info: "Chasseur de Mines Tripartite (CMT)." },
+            { img: "images/navire_bbpd.jpg", q: "Type de bâtiment ?", options: ["Bâtiment Base de Plongeurs Démineurs", "Bâtiment Hydrographique", "Frégate"], a: 0, info: "Bâtiment Base de Plongeurs Démineurs (BBPD)." },
+            { img: "images/navire_brs.jpg", q: "Type de bâtiment ?", options: ["Bâtiment Remorqueur de Sonar", "Bâtiment Ravitailleur", "Chasseur de Mines"], a: 0, info: "Bâtiment Remorqueur de Sonar (BRS)." },
+            { img: "images/navire_begm.jpg", q: "Type de bâtiment ?", options: ["Bâtiment d'Expérimentation de Guerre des Mines", "Bâtiment École", "Patrouilleur"], a: 0, info: "Bâtiment d'Expérimentation de Guerre des Mines (BEGM)." },
+            { img: "images/navire_brf.jpg", q: "Type de bâtiment ?", options: ["Bâtiment Ravitailleur de Forces", "Bâtiment de Soutien", "Porte-Hélicoptères"], a: 0, info: "Bâtiment Ravitailleur de Forces (BRF)." },
+            { img: "images/navire_bcr.jpg", q: "Type de bâtiment ?", options: ["Bâtiment de Commandement et Ravitaillement", "Frégate", "Patrouilleur"], a: 0, info: "Bâtiment de Commandement et Ravitaillement (BCR)." },
+            { img: "images/navire_bsam.jpg", q: "Type de bâtiment ?", options: ["Bâtiment de Soutien et d'Assistance Métropolitain", "Patrouilleur", "Chasseur de Mines"], a: 0, info: "Bâtiment de Soutien et d'Assistance Métropolitain (BSAM)." },
+            { img: "images/navire_bsaom.jpg", q: "Type de bâtiment ?", options: ["Bâtiment de Soutien et d'Assistance Outre-Mer", "Frégate de Surveillance", "Patrouilleur"], a: 0, info: "Bâtiment de Soutien et d'Assistance Outre-Mer (BSAOM)." },
+            { img: "images/navire_rpc.jpg", q: "Type de bâtiment ?", options: ["Remorqueur Portuaire Côtier", "Patrouilleur", "Engin de Débarquement"], a: 0, info: "Remorqueur Portuaire Côtier (RPC)." },
+            { img: "images/navire_bem.jpg", q: "Type de bâtiment ?", options: ["Bâtiment d'Essais et de Mesures", "Bâtiment de Renseignement", "Porte-Avions"], a: 0, info: "Bâtiment d'Essais et de Mesures (BEM)." },
+            { img: "images/navire_bre.jpg", q: "Type de bâtiment ?", options: ["Bâtiment de Renseignement Électromagnétique", "Bâtiment Hydrographique", "Frégate"], a: 0, info: "Bâtiment de Renseignement Électromagnétique (BRE)." },
+            { img: "images/navire_bho.jpg", q: "Type de bâtiment ?", options: ["Bâtiment Hydrographique et Océanographique", "Patrouilleur Polaire", "Chasseur de Mines"], a: 0, info: "Bâtiment Hydrographique et Océanographique (BHO)." },
+            { img: "images/navire_voilier.jpg", q: "Type de bâtiment ?", options: ["Voilier École", "Frégate", "Patrouilleur"], a: 0, info: "Voilier École." },
+            { img: "images/navire_erf.jpg", q: "Type de bâtiment ?", options: ["Embarcation Remonte Filets", "Engin de Débarquement", "Remorqueur"], a: 0, info: "Embarcation Remonte Filets (ERF)." },
+            { img: "images/navire_eda.jpg", q: "Type de bâtiment ?", options: ["Engin de Débarquement Amphibie", "Patrouilleur", "Remorqueur"], a: 0, info: "Engin de Débarquement Amphibie (EDA)." }
         ],
-        pavillons: [
-            // Génération de A à Z
-            { name: "Alpha", img: "images/flag_a.png" }, { name: "Bravo", img: "images/flag_b.png" },
-            { name: "Charlie", img: "images/flag_c.png" }, { name: "Delta", img: "images/flag_d.png" },
-            { name: "Echo", img: "images/flag_e.png" }, { name: "Foxtrot", img: "images/flag_f.png" },
-            { name: "Golf", img: "images/flag_g.png" }, { name: "Hotel", img: "images/flag_h.png" },
-            { name: "India", img: "images/flag_i.png" }, { name: "Juliett", img: "images/flag_j.png" },
-            { name: "Kilo", img: "images/flag_k.png" }, { name: "Lima", img: "images/flag_l.png" },
-            { name: "Mike", img: "images/flag_m.png" }, { name: "November", img: "images/flag_n.png" },
-            { name: "Oscar", img: "images/flag_o.png" }, { name: "Papa", img: "images/flag_p.png" },
-            { name: "Quebec", img: "images/flag_q.png" }, { name: "Romeo", img: "images/flag_r.png" },
-            { name: "Sierra", img: "images/flag_s.png" }, { name: "Tango", img: "images/flag_t.png" },
-            { name: "Uniform", img: "images/flag_u.png" }, { name: "Victor", img: "images/flag_v.png" },
-            { name: "Whiskey", img: "images/flag_w.png" }, { name: "X-ray", img: "images/flag_x.png" },
-            { name: "Yankee", img: "images/flag_y.png" }, { name: "Zulu", img: "images/flag_z.png" }
+
+        // J'ai retiré les indices entre parenthèses dans les OPTIONS pour que ce soit plus dur
+        nato: [
+            { img: "images/flag_a.png", q: "Signification ?", options: ["ALFA", "BRAVO", "ZULU"], a: 0, info: "ALFA (A) - J'ai un scaphandrier en plongée." },
+            { img: "images/flag_b.png", q: "Signification ?", options: ["BRAVO", "CHARLIE", "DELTA"], a: 0, info: "BRAVO (B) - Je charge/décharge des matières dangereuses." },
+            { img: "images/flag_c.png", q: "Signification ?", options: ["CHARLIE", "ECHO", "FOXTROT"], a: 0, info: "CHARLIE (C) - Affirmation." },
+            { img: "images/flag_d.png", q: "Signification ?", options: ["DELTA", "BRAVO", "ALFA"], a: 0, info: "DELTA (D) - Ne me gênez pas, je manœuvre avec difficulté." },
+            { img: "images/flag_e.png", q: "Signification ?", options: ["ECHO", "INDIA", "JULIETT"], a: 0, info: "ECHO (E) - Je viens sur tribord." },
+            { img: "images/flag_f.png", q: "Signification ?", options: ["FOXTROT", "GOLF", "HOTEL"], a: 0, info: "FOXTROT (F) - Je suis désemparé." },
+            { img: "images/flag_g.png", q: "Signification ?", options: ["GOLF", "LIMA", "MIKE"], a: 0, info: "GOLF (G) - J'ai besoin d'un pilote." },
+            { img: "images/flag_h.png", q: "Signification ?", options: ["HOTEL", "INDIA", "KILO"], a: 0, info: "HOTEL (H) - J'ai un pilote à bord." },
+            { img: "images/flag_i.png", q: "Signification ?", options: ["INDIA", "JULIETT", "OSCAR"], a: 0, info: "INDIA (I) - Je viens sur bâbord." },
+            { img: "images/flag_j.png", q: "Signification ?", options: ["JULIETT", "KILO", "LIMA"], a: 0, info: "JULIETT (J) - Incendie à bord." },
+            { img: "images/flag_k.png", q: "Signification ?", options: ["KILO", "MIKE", "NOVEMBER"], a: 0, info: "KILO (K) - Je désire communiquer." },
+            { img: "images/flag_l.png", q: "Signification ?", options: ["LIMA", "PAPA", "QUEBEC"], a: 0, info: "LIMA (L) - Stoppez votre navire." },
+            { img: "images/flag_m.png", q: "Signification ?", options: ["MIKE", "NOVEMBER", "OSCAR"], a: 0, info: "MIKE (M) - Mon navire est stoppé." },
+            { img: "images/flag_n.png", q: "Signification ?", options: ["NOVEMBER", "CHARLIE", "SIERRA"], a: 0, info: "NOVEMBER (N) - Négatif." },
+            { img: "images/flag_o.png", q: "Signification ?", options: ["OSCAR", "PAPA", "ROMEO"], a: 0, info: "OSCAR (O) - Homme à la mer." },
+            { img: "images/flag_p.png", q: "Signification ?", options: ["PAPA", "QUEBEC", "ROMEO"], a: 0, info: "PAPA (P) - Rappel des équipages / Filets accrochés." },
+            { img: "images/flag_q.png", q: "Signification ?", options: ["QUEBEC", "SIERRA", "TANGO"], a: 0, info: "QUEBEC (Q) - Demande libre pratique." },
+            { img: "images/flag_r.png", q: "Signification ?", options: ["ROMEO", "UNIFORM", "VICTOR"], a: 0, info: "ROMEO (R) - Pas de signification particulière isolée." },
+            { img: "images/flag_s.png", q: "Signification ?", options: ["SIERRA", "TANGO", "UNIFORM"], a: 0, info: "SIERRA (S) - Je bats en arrière." },
+            { img: "images/flag_t.png", q: "Signification ?", options: ["TANGO", "VICTOR", "WHISKEY"], a: 0, info: "TANGO (T) - Chalutage en cours." },
+            { img: "images/flag_u.png", q: "Signification ?", options: ["UNIFORM", "WHISKEY", "X-RAY"], a: 0, info: "UNIFORM (U) - Vous courez vers un danger." },
+            { img: "images/flag_v.png", q: "Signification ?", options: ["VICTOR", "X-RAY", "YANKEE"], a: 0, info: "VICTOR (V) - Je demande assistance." },
+            { img: "images/flag_w.png", q: "Signification ?", options: ["WHISKEY", "YANKEE", "ZULU"], a: 0, info: "WHISKEY (W) - Assistance médicale." },
+            { img: "images/flag_x.png", q: "Signification ?", options: ["X-RAY", "ZULU", "ALFA"], a: 0, info: "X-RAY (X) - Veillez mes signaux." },
+            { img: "images/flag_y.png", q: "Signification ?", options: ["YANKEE", "ALFA", "BRAVO"], a: 0, info: "YANKEE (Y) - Je chasse sur mon ancre." },
+            { img: "images/flag_z.png", q: "Signification ?", options: ["ZULU", "KILO", "MIKE"], a: 0, info: "ZULU (Z) - J'ai besoin d'un remorqueur." }
         ],
+
         famas: [
-            { name: "Chargeur", img: "images/famas_chargeur.jpg" },
-            { name: "Ensemble Mobile", img: "images/famas_ensemble_mobile.jpg" },
-            { name: "Sélecteur de tir", img: "images/famas_selecteur.jpg" }
+            { img: "images/famas_ensemble_mobile.jpg", q: "Pièce ?", options: ["La culasse", "L'ensemble mobile", "Le percuteur"], a: 1, info: "L'ensemble mobile." },
+            { img: "images/famas_chargeur.jpg", q: "Capacité ?", options: ["20", "25", "30"], a: 1, info: "25 cartouches." },
+            { img: "images/famas_selecteur.jpg", q: "Position '1' ?", options: ["Sûreté", "Coup par coup", "Rafale"], a: 1, info: "1 = Semi-automatique." }
         ]
     };
 
-    // --- LOGIQUE DU JEU ---
+    const natoAlphabet = {
+        'A': 'flag_a.png', 'B': 'flag_b.png', 'C': 'flag_c.png', 'D': 'flag_d.png', 'E': 'flag_e.png', 
+        'F': 'flag_f.png', 'G': 'flag_g.png', 'H': 'flag_h.png', 'I': 'flag_i.png', 'J': 'flag_j.png', 
+        'K': 'flag_k.png', 'L': 'flag_l.png', 'M': 'flag_m.png', 'N': 'flag_n.png', 'O': 'flag_o.png', 
+        'P': 'flag_p.png', 'Q': 'flag_q.png', 'R': 'flag_r.png', 'S': 'flag_s.png', 'T': 'flag_t.png', 
+        'U': 'flag_u.png', 'V': 'flag_v.png', 'W': 'flag_w.png', 'X': 'flag_x.png', 'Y': 'flag_y.png', 
+        'Z': 'flag_z.png'
+    };
+    const natoNames = {
+        'A': 'ALFA', 'B': 'BRAVO', 'C': 'CHARLIE', 'D': 'DELTA', 'E': 'ECHO', 'F': 'FOXTROT',
+        'G': 'GOLF', 'H': 'HOTEL', 'I': 'INDIA', 'J': 'JULIETT', 'K': 'KILO', 'L': 'LIMA',
+        'M': 'MIKE', 'N': 'NOVEMBER', 'O': 'OSCAR', 'P': 'PAPA', 'Q': 'QUEBEC', 'R': 'ROMEO',
+        'S': 'SIERRA', 'T': 'TANGO', 'U': 'UNIFORM', 'V': 'VICTOR', 'W': 'WHISKEY', 'X': 'X-RAY',
+        'Y': 'YANKEE', 'Z': 'ZULU'
+    };
+
+    // ================= MOTEUR =================
     
-    let currentCategory = 'grades';
-    let currentItem = null;
-
-    function setMode(category) {
-        currentCategory = category;
+    function switchTab(id) {
+        document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.target.classList.add('active');
         
-        // Mise à jour des boutons
-        document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`btn-${category}`).classList.add('active');
-        
-        // Mise à jour du titre
-        document.getElementById('category-title').innerText = category.charAt(0).toUpperCase() + category.slice(1);
-        
-        // Lancer la première question
-        nextQuestion();
-    }
-
-    function getRandomItem() {
-        const items = data[currentCategory];
-        const randomIndex = Math.floor(Math.random() * items.length);
-        return items[randomIndex];
-    }
-
-    function nextQuestion() {
-        currentItem = getRandomItem();
-        
-        // Mise à jour de l'image
-        const imgElement = document.getElementById('quiz-image');
-        imgElement.src = currentItem.img;
-        
-        // Réinitialiser la réponse (cachée)
-        const answerText = document.getElementById('answer-text');
-        answerText.innerText = "Cliquez pour voir la réponse";
-        answerText.className = "hidden-answer";
-    }
-
-    function revealAnswer() {
-        const answerText = document.getElementById('answer-text');
-        if (answerText.classList.contains('hidden-answer')) {
-            answerText.innerText = currentItem.name;
-            answerText.className = "revealed-answer";
+        if(db[id]) {
+            loadQuestion(id);
+        } else if (id === 'nato') {
+            loadQuestion('nato');
         }
     }
 
-    // Initialisation
-    setMode('grades');
+    function loadQuestion(cat) {
+        const container = document.getElementById(`quiz-${cat}`);
+        // 1. Choisir une question aléatoire
+        const qData = db[cat][Math.floor(Math.random() * db[cat].length)];
+        
+        // 2. Préparer les options et marquer la bonne réponse
+        let options = qData.options.map((opt, index) => {
+            return {
+                text: opt,
+                isCorrect: (index === qData.a)
+            };
+        });
 
+        // 3. MÉLANGER LES OPTIONS (SHUFFLE)
+        options = options.sort(() => Math.random() - 0.5);
+
+        // 4. Générer l'image si elle existe
+        let imgClass = "quiz-image";
+        if(cat === 'nato') imgClass += " flag-quiz-img";
+        let imageHTML = qData.img ? `<img src="${qData.img}" class="${imgClass}" alt="Image">` : '';
+
+        // 5. Générer le HTML
+        container.innerHTML = `
+            <div class="question-card">
+                ${imageHTML}
+                <div class="question-text">${qData.q}</div>
+                <div class="options-grid">
+                    ${options.map((opt) => 
+                        `<button class="opt-btn" onclick="check(this, ${opt.isCorrect}, '${qData.info.replace(/'/g, "\\'")}')">${opt.text}</button>`
+                    ).join('')}
+                </div>
+                <div class="feedback-box"></div>
+                <button class="btn-next" style="display:none" onclick="loadQuestion('${cat}')">Suivant →</button>
+            </div>
+        `;
+    }
+
+    function check(btn, isCorrect, info) {
+        const card = btn.closest('.question-card');
+        const feedback = card.querySelector('.feedback-box');
+        
+        // Désactiver tous les boutons pour empêcher de rejouer sur la même question
+        card.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+
+        if(isCorrect) {
+            btn.style.background = "#d4edda"; 
+            btn.style.borderColor = "#28a745";
+            feedback.innerHTML = `<strong style="color:#155724">Exact !</strong><br>${info}`;
+            feedback.style.background = "#d4edda";
+        } else {
+            btn.style.background = "#f8d7da"; 
+            btn.style.borderColor = "#dc3545";
+            feedback.innerHTML = `<strong style="color:#721c24">Faux.</strong><br>${info}`;
+            feedback.style.background = "#f8d7da";
+        }
+        feedback.style.display = 'block';
+        card.querySelector('.btn-next').style.display = 'block';
+    }
+
+    function translateNato(text) {
+        const output = document.getElementById('nato-res');
+        if(!text.trim()) { output.innerHTML = ""; return; }
+        
+        output.innerHTML = text.toUpperCase().split('').map(char => {
+            if (natoAlphabet[char]) {
+                const img = `<img src="images/${natoAlphabet[char]}" class="flag-icon-small">`;
+                return `<div class="nato-item">${img} ${natoNames[char]}</div>`;
+            } else if (char.match(/[0-9]/)) {
+                 return `<div class="nato-item">${char}</div>`;
+            }
+            return char === ' ' ? '<div style="width:100%"></div>' : '';
+        }).join('');
+    }
+
+    loadQuestion('grades');
 </script>
 
 </body>
