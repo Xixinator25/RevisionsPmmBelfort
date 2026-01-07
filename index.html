@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Révision PMM - Randomisée</title>
+    <title>Révision PMM - Complète & G2</title>
     <style>
         :root {
             --navy-blue: #0f1e3d;
@@ -117,14 +117,14 @@
 <body>
 
 <header>
-    <h1>PMM - Révision Marine Nationale</h1>
+    <h1>PMM - Révision PMM Belfort</h1>
 </header>
 
 <nav>
     <button onclick="switchTab('grades')" class="active">Grades</button>
     <button onclick="switchTab('navires')">Navires</button>
     <button onclick="switchTab('nato')">Drapeaux</button>
-    <button onclick="switchTab('famas')">FAMAS</button>
+    <button onclick="switchTab('famas')">FAMAS G2</button>
 </nav>
 
 <main>
@@ -149,15 +149,13 @@
     </div>
 
     <div id="famas" class="section-content">
-        <h2>FAMAS</h2>
+        <h2>Le FAMAS G2</h2>
         <div id="quiz-famas" class="quiz-area"></div>
     </div>
 </main>
 
 <script>
     // ================= BASE DE DONNÉES =================
-    // Note : L'index 'a' indique la bonne réponse DANS LA LISTE 'options' D'ORIGINE.
-    // Le code JS se charge ensuite de tout mélanger à l'affichage.
     
     const db = {
         grades: [
@@ -224,7 +222,6 @@
             { img: "images/navire_eda.jpg", q: "Type de bâtiment ?", options: ["Engin de Débarquement Amphibie", "Patrouilleur", "Remorqueur"], a: 0, info: "Engin de Débarquement Amphibie (EDA)." }
         ],
 
-        // J'ai retiré les indices entre parenthèses dans les OPTIONS pour que ce soit plus dur
         nato: [
             { img: "images/flag_a.png", q: "Signification ?", options: ["ALFA", "BRAVO", "ZULU"], a: 0, info: "ALFA (A) - J'ai un scaphandrier en plongée." },
             { img: "images/flag_b.png", q: "Signification ?", options: ["BRAVO", "CHARLIE", "DELTA"], a: 0, info: "BRAVO (B) - Je charge/décharge des matières dangereuses." },
@@ -255,9 +252,18 @@
         ],
 
         famas: [
-            { img: "images/famas_ensemble_mobile.jpg", q: "Pièce ?", options: ["La culasse", "L'ensemble mobile", "Le percuteur"], a: 1, info: "L'ensemble mobile." },
-            { img: "images/famas_chargeur.jpg", q: "Capacité ?", options: ["20", "25", "30"], a: 1, info: "25 cartouches." },
-            { img: "images/famas_selecteur.jpg", q: "Position '1' ?", options: ["Sûreté", "Coup par coup", "Rafale"], a: 1, info: "1 = Semi-automatique." }
+            // Données FAMAS G2 issues du PDF
+            { img: "images/famas_ensemble_mobile.jpg", q: "Pièce principale ?", options: ["L'ensemble mobile", "La culasse", "Le percuteur"], a: 0, info: "L'ensemble mobile (contient culasse, percuteur...)." },
+            { img: "images/famas_chargeur.jpg", q: "Capacité (G2) ?", options: ["30 cartouches", "25 cartouches", "20 cartouches"], a: 0, info: "Le G2 a un chargeur de 30 cartouches (Standard OTAN)." },
+            { img: "images/famas_selecteur.jpg", q: "Position '1' du sélecteur ?", options: ["Coup par coup", "Rafale", "Sûreté"], a: 0, info: "1 = Tir coup par coup (Semi-auto)." },
+            
+            // Nouvelles questions techniques G2 (Sans image spécifique, connaissance)
+            { q: "Quelle est la portée pratique du FAMAS G2 ?", options: ["300 m", "200 m", "600 m"], a: 0, info: "300 mètres (Portée max 2500m)." },
+            { q: "Quel est le poids du FAMAS G2 ?", options: ["3,750 kg", "4,200 kg", "3,100 kg"], a: 0, info: "3,750 kg (sans chargeur)." },
+            { q: "Quelle est la pièce de sécurité ?", options: ["Le boîtier de mécanisme", "La crosse", "L'ensemble mobile"], a: 0, info: "Le boîtier de mécanisme (contient le limiteur)." },
+            { q: "Sur le limiteur de rafale, que signifie '0' ?", options: ["Rafale libre", "Rafale limitée", "Sûreté"], a: 0, info: "0 = Rafale libre (tant qu'on appuie)." },
+            { q: "Sur le limiteur de rafale, que signifie '3' ?", options: ["Rafale de 3 coups", "Rafale libre", "Sûreté"], a: 0, info: "3 = Rafale limitée à 3 coups." },
+            { q: "Quelle est la cadence de tir théorique ?", options: ["1000 coups/mn", "600 coups/mn", "100 coups/mn"], a: 0, info: "1000 coups/minute (Théorique)." }
         ]
     };
 
@@ -294,10 +300,9 @@
 
     function loadQuestion(cat) {
         const container = document.getElementById(`quiz-${cat}`);
-        // 1. Choisir une question aléatoire
         const qData = db[cat][Math.floor(Math.random() * db[cat].length)];
         
-        // 2. Préparer les options et marquer la bonne réponse
+        // Préparer les options (texte + indicateur si correct)
         let options = qData.options.map((opt, index) => {
             return {
                 text: opt,
@@ -305,15 +310,13 @@
             };
         });
 
-        // 3. MÉLANGER LES OPTIONS (SHUFFLE)
+        // SHUFFLE : Mélange aléatoire des options
         options = options.sort(() => Math.random() - 0.5);
 
-        // 4. Générer l'image si elle existe
         let imgClass = "quiz-image";
         if(cat === 'nato') imgClass += " flag-quiz-img";
         let imageHTML = qData.img ? `<img src="${qData.img}" class="${imgClass}" alt="Image">` : '';
 
-        // 5. Générer le HTML
         container.innerHTML = `
             <div class="question-card">
                 ${imageHTML}
@@ -332,8 +335,6 @@
     function check(btn, isCorrect, info) {
         const card = btn.closest('.question-card');
         const feedback = card.querySelector('.feedback-box');
-        
-        // Désactiver tous les boutons pour empêcher de rejouer sur la même question
         card.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
 
         if(isCorrect) {
