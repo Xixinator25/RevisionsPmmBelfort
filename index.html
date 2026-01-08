@@ -268,6 +268,16 @@
             border-bottom: 2px solid var(--light-grey);
             padding-bottom: 8px;
         }
+        
+        /* Style spécifique pour le Code du Marin */
+        .code-marin-text p {
+            margin: 0 0 10px 0;
+            padding-left: 10px;
+            border-left: 3px solid var(--gold);
+        }
+        .code-marin-text strong {
+            color: var(--navy-blue);
+        }
 
         .checklist-container div:active { background-color: #f9f9f9; }
         .btn-reset { margin-top:15px; padding:12px; width:100%; background:#f1f1f1; border:none; border-radius:8px; color:#555; font-weight:bold; cursor: pointer; }
@@ -310,6 +320,30 @@
 
     <div id="navires" class="section-content">
         <h2>Bâtiments de Surface</h2>
+        
+        <div class="bonus-card" style="margin-bottom: 20px; background: #e3f2fd; border-color: #bbdefb;">
+            <div class="bonus-title">🧠 Mémo Navigation</div>
+            <div style="display:flex; justify-content:space-around; text-align:center;">
+                <div style="flex:1;">
+                    <div style="font-weight:bold; color:#b30000;">BÂBORD</div>
+                    <div style="font-size:2rem;">🔴</div>
+                    <div style="font-size:0.8rem;">(Gauche)</div>
+                    <div style="font-style:italic; font-size:0.8rem; margin-top:5px;">"Batterie"</div>
+                </div>
+                <div style="flex:1; border-left:1px solid #ccc;">
+                    <div style="font-weight:bold; color:#28a745;">TRIBORD</div>
+                    <div style="font-size:2rem;">🟢</div>
+                    <div style="font-size:0.8rem;">(Droite)</div>
+                    <div style="font-style:italic; font-size:0.8rem; margin-top:5px;">"Tricot"</div>
+                </div>
+            </div>
+            <p style="text-align:center; font-size:0.85rem; margin-top:10px; color:#555;">
+                Astuce : Le mot <strong>BATTERIE</strong>.<br>
+                <strong>BA</strong> (Bâbord) est à gauche (et Rouge sur le mot).<br>
+                <strong>TRI</strong> (Tribord) est à droite (et Vert).
+            </p>
+        </div>
+
         <div id="quiz-navires"></div>
     </div>
 
@@ -339,6 +373,35 @@
         <h2>Outils & Bonus</h2>
 
         <div class="bonus-card">
+            <div class="bonus-title">📜 Code du Marin</div>
+            <div class="code-marin-text" style="font-size:0.9rem; line-height:1.4; color:#333; text-align:justify; max-height:250px; overflow-y:auto; padding:10px; background:#f9f9f9; border-radius:8px; border:1px solid #eee;">
+                <p><strong>Au service de la nation,</strong> je lui suis entièrement dévoué, en tout temps et en tout lieu.</p>
+                <p><strong>Déterminé,</strong> j'accomplis ma mission avec abnégation, si nécessaire au péril de ma vie.</p>
+                <p><strong>Conscient de la force dont je suis dépositaire,</strong> j'obéis aux ordres, dans le respect des lois, de l’éthique et des conventions internationales.</p>
+                <p><strong>Membre de la communauté des gens de mer,</strong> je m’attache à la sauvegarde de la vie en mer.</p>
+                <p><strong>Marin professionnel,</strong> j'entretiens mes capacités intellectuelles et physiques, et développe en permanence ma compétence et ma force morale.</p>
+                <p><strong>Je fais preuve d’initiative</strong> et m’adapte en toutes circonstances, dans l’exercice quotidien de mon métier et les situations extrêmes des missions opérationnelles.</p>
+                <p><strong>Homme ou femme d’un même groupe solidaire,</strong> j'agis avec honneur, franchise et loyauté.</p>
+                <p><strong>Attentif aux autres et déterminé à surmonter les difficultés,</strong> j'œuvre pour la cohésion et le dynamisme de mon équipe, de mon service, de mon unité.</p>
+                <p><strong>Je m’attache à maintenir l’esprit d’équipage,</strong> en mer comme à terre.</p>
+                <p><strong>Je suis ouvert sur le monde et la société,</strong> dont je connais les valeurs et respecte les différences.</p>
+                <p><strong>Je m’exprime avec réserve</strong> pour ne pas porter atteinte à la neutralité des armées en matière philosophique, politique ou religieuse.</p>
+                <p><strong>Fier de mon engagement,</strong> je suis, en uniforme comme en civil, un ambassadeur de ma spécialité, de mon unité, de la marine nationale et de la France.</p>
+            </div>
+        </div>
+
+        <div class="bonus-card">
+            <div class="bonus-title">🎵 Chants PMM</div>
+            <select id="chant-select" onchange="showChant(this.value)" style="width:100%; padding:10px; border-radius:8px; margin-bottom:15px; font-size:1rem; border:1px solid #ccc;">
+                <option value="">-- Choisir un chant --</option>
+                <option value="santiano">Santiano</option>
+                <option value="strasbourgeoise">La Strasbourgeoise</option>
+            </select>
+            
+            <div id="chant-display" style="white-space: pre-line; background:#f9f9f9; padding:15px; border-radius:8px; font-size:0.95rem; line-height:1.5; display:none; border:1px solid #eee; max-height:300px; overflow-y:auto;"></div>
+        </div>
+
+        <div class="bonus-card">
             <div class="bonus-title">🎒 Checklist Vestimentaire</div>
             
             <div class="sub-nav" style="margin-bottom: 15px;">
@@ -354,7 +417,7 @@
 
         <div class="bonus-card" style="opacity: 0.7;">
             <div class="bonus-title">⚓ À venir...</div>
-            <p style="color:#666;">D'autres outils seront ajoutés ici (Chants, Sécurité, etc.)</p>
+            <p style="color:#666;">D'autres outils seront ajoutés ici (Sécurité, etc.)</p>
         </div>
     </div>
 </main>
@@ -399,7 +462,7 @@
         { l: "Z", name: "ZULU", m: "J'ai besoin d'un remorqueur.", img: "images/flag_z.png" }
     ];
 
-    // --- DONNÉES SAC (Basées sur le PDF 11 Novembre) ---
+    // --- DONNÉES SAC ---
     const sacData = {
         homme: [
             "Bâchi (avec pompon rouge)",
@@ -520,7 +583,13 @@
         document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        event.target.classList.add('active');
+        // Hack pour activer le bouton de nav même si l'appel ne vient pas du clic direct
+        if(event && event.target && event.target.tagName === 'BUTTON') {
+             event.target.classList.add('active');
+        } else {
+             const btn = document.querySelector(`nav button[onclick="switchTab('${id}')"]`);
+             if(btn) btn.classList.add('active');
+        }
         
         if (id === 'nato') {
             loadNatoQuestion();
@@ -556,9 +625,8 @@
                 img: item.img,
                 q: "Quel est ce pavillon ?",
                 info: `${item.name} : ${item.m}`,
-                a: 0 // La bonne réponse sera toujours à l'index 0 avant mélange
+                a: 0
             };
-            // Générer 2 mauvaises réponses au hasard
             let others = natoData.filter(x => x.l !== item.l).sort(() => 0.5 - Math.random()).slice(0, 2);
             qData.options = [item.name, others[0].name, others[1].name];
 
@@ -592,7 +660,6 @@
                 </div>`;
         }
         
-        // Sécurisation de la chaîne pour éviter les bugs si elle contient des apostrophes
         const safeInfo = qData.info.replace(/'/g, "\\'");
 
         container.innerHTML = `
@@ -667,10 +734,8 @@
     // --- GESTION CHECKLIST (SAC) ---
     function setSacMode(mode) {
         currentSacMode = mode;
-        // Mise à jour visuelle des boutons
         document.getElementById('btn-sac-homme').classList.toggle('active', mode === 'homme');
         document.getElementById('btn-sac-femme').classList.toggle('active', mode === 'femme');
-        // Recharger la liste
         loadChecklist();
     }
 
@@ -678,11 +743,9 @@
         const container = document.getElementById('checklist-container');
         container.innerHTML = "";
         
-        // On récupère la bonne liste (homme ou femme)
         const items = sacData[currentSacMode];
         
         items.forEach((item, index) => {
-            // Clé unique pour sauvegarder : pmm_sac_homme_0 ou pmm_sac_femme_0
             const storageKey = `pmm_sac_${currentSacMode}_${index}`;
             const isChecked = localStorage.getItem(storageKey) === 'true';
             
@@ -693,7 +756,6 @@
             div.style.alignItems = "center";
             div.style.cursor = "pointer";
             
-            // Interaction sur toute la ligne
             div.onclick = (e) => {
                 if(e.target.type !== 'checkbox') {
                     const chk = div.querySelector('input');
@@ -714,7 +776,7 @@
 
     function saveCheck(key, status) {
         localStorage.setItem(key, status);
-        loadChecklist(); // Recharge pour le style visuel (barré)
+        loadChecklist();
     }
 
     function resetChecklist() {
@@ -722,6 +784,23 @@
             const items = sacData[currentSacMode];
             items.forEach((_, i) => localStorage.removeItem(`pmm_sac_${currentSacMode}_${i}`));
             loadChecklist();
+        }
+    }
+
+    // --- CHANTS ---
+    const chantsLyrics = {
+        santiano: "C'est un fameux trois-mâts fin comme un oiseau\nHisse et ho, Santiano !\nDix-huit nœuds, quatre cent tonneaux\nJe suis fier d'y être matelot\n\n(Refrain)\nTiens bon la vague et tiens bon le vent\nHisse et ho, Santiano !\nSi Dieu veut toujours droit devant\nNous irons jusqu'à San Francisco\n\nJe pars pour de longs mois en laissant Margot\nHisse et ho, Santiano !\nD'y penser j'avais le cœur gros\nEn doublant les feux de Saint-Malo\n\n(Refrain)\n\nOn prétend que là-bas l'argent coule à flots\nHisse et ho, Santiano !\nOn trouve l'or au fond des ruisseaux\nJ'en ramènerai plusieurs lingots\n\n(Refrain)\n\nUn jour, je reviendrai chargé de cadeaux\nHisse et ho, Santiano !\nAu pays, j'irai voir Margot\nÀ son doigt, je passerai l'anneau\n\n(Refrain)",
+        
+        strasbourgeoise: "Petit papa voici la mi-carême,\nCar te voici déguisé en soldat.\nPetit papa dis-moi si c'est pour rire,\nOu pour faire peur aux tout petits enfants ?\n\n(Refrain)\nNon mon enfant je pars pour la patrie,\nC'est un devoir où tous les papas s'en vont,\nEmbrasse-moi petite fille chérie,\nJe rentrerai bien vite à la maison.\n\nDis-moi maman quelle est cette médaille,\nEt cette lettre qu'apporte le facteur ?\nDis-moi maman tu pleures et tu défailles,\nIls ont tué petit papa chéri.\n\n(Dernier couplet)\nLa neige tombe aux portes de la ville,\nLà est assis un enfant de Strasbourg.\nIl reste là malgré le froid la bise,\nIl reste là malgré le froid du jour.\nUn homme passe et à l'enfant il donne,\nUn peu d'argent, petit n'a plus de toit.\nSa mère est morte et son père est en France,\nIl n'a plus rien, plus de maison à soi.",
+                 };
+
+    function showChant(chantKey) {
+        const display = document.getElementById('chant-display');
+        if(chantKey && chantsLyrics[chantKey]) {
+            display.style.display = 'block';
+            display.textContent = chantsLyrics[chantKey];
+        } else {
+            display.style.display = 'none';
         }
     }
 
