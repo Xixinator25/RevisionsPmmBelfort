@@ -121,7 +121,7 @@
             font-size: 1.3rem;
         }
 
-        /* Sous-menu pour NATO */
+        /* Sous-menu (NATO & Sac) */
         .sub-nav {
             display: flex;
             gap: 10px;
@@ -199,7 +199,7 @@
             color: #444;
             transition: all 0.2s;
             touch-action: manipulation;
-            white-space: normal; /* Permet le texte sur plusieurs lignes */
+            white-space: normal;
             line-height: 1.3;
         }
         
@@ -248,6 +248,30 @@
         }
         .nato-flag-mini { height: 20px; margin-right: 8px; border: 1px solid #fff; }
 
+        /* --- BONUS & CHECKLIST --- */
+        .bonus-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+        }
+        .bonus-title {
+            color: var(--navy-blue);
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--light-grey);
+            padding-bottom: 8px;
+        }
+
+        .checklist-container div:active { background-color: #f9f9f9; }
+        .btn-reset { margin-top:15px; padding:12px; width:100%; background:#f1f1f1; border:none; border-radius:8px; color:#555; font-weight:bold; cursor: pointer; }
+
         footer {
             background-color: #12244a;
             color: #8fa1b9;
@@ -275,6 +299,7 @@
     <button onclick="switchTab('navires')">Navires</button>
     <button onclick="switchTab('nato')">Code Int.</button>
     <button onclick="switchTab('famas')">FAMAS</button>
+    <button onclick="switchTab('bonus')">Bonus</button>
 </nav>
 
 <main>
@@ -309,6 +334,29 @@
         <h2>FAMAS G2</h2>
         <div id="quiz-famas"></div>
     </div>
+
+    <div id="bonus" class="section-content">
+        <h2>Outils & Bonus</h2>
+
+        <div class="bonus-card">
+            <div class="bonus-title">🎒 Checklist Vestimentaire</div>
+            
+            <div class="sub-nav" style="margin-bottom: 15px;">
+                <button onclick="setSacMode('homme')" id="btn-sac-homme" class="active">Homme</button>
+                <button onclick="setSacMode('femme')" id="btn-sac-femme">Femme</button>
+            </div>
+
+            <p style="font-style:italic; color:#666; font-size:0.9rem; margin-top:0;">Liste pour cérémonie :</p>
+            <div id="checklist-container" style="text-align: left;">
+                </div>
+            <button onclick="resetChecklist()" class="btn-reset">Tout décocher</button>
+        </div>
+
+        <div class="bonus-card" style="opacity: 0.7;">
+            <div class="bonus-title">⚓ À venir...</div>
+            <p style="color:#666;">D'autres outils seront ajoutés ici (Chants, Sécurité, etc.)</p>
+        </div>
+    </div>
 </main>
 
 <footer>
@@ -318,9 +366,10 @@
 
 <script>
     let currentScore = 0;
-    let currentNatoMode = 'letter'; // 'letter' ou 'meaning'
+    let currentNatoMode = 'letter';
+    let currentSacMode = 'homme'; 
 
-    // --- DONNÉES NATO (Source Unique pour générer les 2 modes) ---
+    // --- DONNÉES NATO ---
     const natoData = [
         { l: "A", name: "ALFA", m: "J'ai un scaphandrier en plongée.", img: "images/flag_a.png" },
         { l: "B", name: "BRAVO", m: "Je charge/décharge des matières dangereuses.", img: "images/flag_b.png" },
@@ -350,9 +399,44 @@
         { l: "Z", name: "ZULU", m: "J'ai besoin d'un remorqueur.", img: "images/flag_z.png" }
     ];
 
+    // --- DONNÉES SAC (Basées sur le PDF 11 Novembre) ---
+    const sacData = {
+        homme: [
+            "Bâchi (avec pompon rouge)",
+            "Vareuse bleue (repassée)",
+            "Marinière (tricot rayé bleu/blanc)",
+            "Pantalon bleu marine (repassé)",
+            "Ceinturon blanc",
+            "Chaussettes noires",
+            "Guêtres",
+            "Chaussures noires (cirées)",
+            "Gants blancs",
+            "Insignes et décorations",
+            "Veste civile / Pull (pour après)",
+            "Barres céréalières (en cas de creux)"
+        ],
+        femme: [
+            "Tricorne",
+            "Chemise blanche",
+            "Cravate noire",
+            "Vareuse bleue (repassée)",
+            "Pantalon bleu marine (repassé)",
+            "Ceinturon blanc",
+            "Chaussettes noires",
+            "Guêtres",
+            "Chaussures noires (cirées)",
+            "Gants blancs",
+            "Insignes et décorations",
+            "Matériel chignon (barrettes/pinces)",
+            "Veste civile / Pull (pour après)",
+            "Barres céréalières (en cas de creux)"
+        ]
+    };
+
     // --- BASE DE DONNÉES QUIZ ---
     const db = {
         grades: [
+            // GRADES EXISTANTS
             { img: "images/grade_matelot.jpg", q: "Quel est ce grade ?", options: ["Matelot", "Quartier-Maître de 2ème classe", "Mousse"], a: 0, info: "Pas de galon = Matelot." },
             { img: "images/grade_qm2.jpg", q: "Quel est ce grade ?", options: ["Matelot", "Quartier-Maître de 2ème classe", "Quartier-Maître de 1ère classe"], a: 1, info: "2 chevrons rouges = Quartier-Maître de 2ème classe." },
             { img: "images/grade_qm1.jpg", q: "Quel est ce grade ?", options: ["Quartier-Maître de 2ème classe", "Quartier-Maître de 1ère classe", "Second Maître"], a: 1, info: "1 chevron rouge = Quartier-Maître de 1ère classe." },
@@ -374,17 +458,18 @@
             { img: "images/grade_va.jpg", q: "Quel est ce grade ?", options: ["Contre-Amiral", "Vice-Amiral", "Vice-Amiral d'Escadre"], a: 1, info: "3 étoiles = Vice-Amiral." },
             { img: "images/grade_vae.jpg", q: "Quel est ce grade ?", options: ["Vice-Amiral", "Vice-Amiral d'Escadre", "Amiral"], a: 1, info: "4 étoiles = Vice-Amiral d'Escadre." },
             { img: "images/grade_amiral.jpg", q: "Quel est ce grade ?", options: ["Vice-Amiral d'Escadre", "Amiral", "Amiral de France"], a: 1, info: "5 étoiles = Amiral." },
-            { img: "images/coiffe_bachi.png", q: "Comment s'appelle cette coiffe ?", options: ["Le Bâchi", "Le Képi", "Le Calot"], a: 0, info: "C'est le Bâchi (ou bonnet de marin) avec sa célèbre houppette rouge." },
-            { img: "images/coiffe_bachi.png", q: "Qui porte cette coiffe ?", options: ["Les Militaires du rang (Équipage)", "Les Officiers Mariniers", "Les Officiers"], a: 0, info: "Porté par les Matelots et Quartiers-Maîtres." },           
-            { img: "images/coiffe_casquette.png", q: "Qui porte cette casquette ?", options: ["Officiers Mariniers (Masculin)", "Équipage", "Tout le monde"], a: 0, info: "Casquette portée par les Officiers Mariniers masculins (et les Officiers)." },
-            { img: "images/coiffe_tricorne.png", q: "Quel est ce chapeau féminin ?", options: ["Le Tricorne", "Le Bâchi", "La Coiffe"], a: 0, info: "Le Tricorne. Il est porté par le personnel féminin (Officiers et OM)." },
-            { img: "images/macaron_equipage.png", q: "À qui appartient ce macaron ?", options: ["Équipage", "Officier Marinier", "Officier"], a: 0, info: "Ancre ROUGE = Équipage (Matelots et QM)." },
+            
+            // COIFFES ET MACARONS
+            { img: "images/coiffe_bachi.png", q: "Comment s'appelle cette coiffe ?", options: ["Le Bâchi", "Le Képi", "Le Calot"], a: 0, info: "C'est le Bâchi (bonnet de marin) avec sa célèbre houppette rouge." },
+            { img: "images/coiffe_bachi.png", q: "Qui porte le Bâchi ?", options: ["L'Équipage (Militaires du rang)", "Les Officiers Mariniers", "Les Officiers"], a: 0, info: "Il est porté par les Matelots et les Quartiers-Maîtres." },
+            { img: "images/coiffe_casquette.png", q: "Qui porte cette casquette ?", options: ["Officiers Mariniers & Officiers", "Uniquement les Amiraux", "Tout le monde"], a: 0, info: "Portée par le personnel masculin : Officiers Mariniers, Officiers et Officiers Généraux." },
+            { img: "images/coiffe_tricorne.png", q: "Quel est ce chapeau féminin ?", options: ["Le Tricorne", "Le Bâchi", "La Coiffe"], a: 0, info: "Le Tricorne. Il est porté par le personnel féminin (sauf Équipage qui porte un tricorne souple différent)." },
+            { img: "images/macaron_equipage.png", q: "À qui appartient ce macaron (insigne) ?", options: ["Équipage", "Officier Marinier", "Officier"], a: 0, info: "Ancre ROUGE = Équipage (Matelots et Quartiers-Maîtres)." },
             { img: "images/macaron_om.png", q: "À qui appartient ce macaron ?", options: ["Officier Marinier", "Officier", "Amiral"], a: 0, info: "Ancre D'OR seule = Officier Marinier." },
-            { img: "images/macaron_officier.png", q: "À qui appartient ce macaron ?", options: ["Officier", "Officier Marinier", "Équipage"], a: 0, info: "Ancre entourée de LAURIERS = Officier (et Aspirant)." },
+            { img: "images/macaron_officier.png", q: "À qui appartient ce macaron ?", options: ["Officier", "Officier Marinier", "Équipage"], a: 0, info: "Ancre entourée de LAURIERS = Officiers (et Aspirants)." },
             { img: "images/macaron_amiral.png", q: "À qui appartient ce macaron ?", options: ["Officier Général (Amiral)", "Commandant", "Major"], a: 0, info: "Ancre AILÉE avec ÉTOILES = Officier Général (Amiral)." }
         ],
 
-        // LISTE ORIGINALE DU NAVIRE - INCHANGÉE
         navires: [
             { img: "images/navire_pa.jpg", q: "Type de bâtiment ?", options: ["Porte-Avions", "Porte-Hélicoptères Amphibie", "Bâtiment Ravitailleur"], a: 0, info: "Porte-Avions (Charles de Gaulle)." },
             { img: "images/navire_fremm.jpg", q: "Type de bâtiment ?", options: ["Frégate de Surveillance", "Frégate Multi-Missions", "Patrouilleur de Haute Mer"], a: 1, info: "Frégate Multi-Missions (FREMM)." },
@@ -438,7 +523,9 @@
         event.target.classList.add('active');
         
         if (id === 'nato') {
-            loadNatoQuestion(); // Charge le mode actuel
+            loadNatoQuestion();
+        } else if (id === 'bonus') {
+            loadChecklist();
         } else if (db[id]) {
             loadQuestion(id);
         }
@@ -464,7 +551,7 @@
         let qData = {};
 
         if (currentNatoMode === 'letter') {
-            // MODE LETTRE : On montre le drapeau, on cherche le NOM (Alpha, Bravo...)
+            // MODE LETTRE
             qData = {
                 img: item.img,
                 q: "Quel est ce pavillon ?",
@@ -476,7 +563,7 @@
             qData.options = [item.name, others[0].name, others[1].name];
 
         } else {
-            // MODE SIGNIFICATION : On montre le drapeau (ou le nom), on cherche la SIGNIFICATION
+            // MODE SIGNIFICATION
             qData = {
                 img: item.img,
                 q: `Que signifie le pavillon ${item.name} ?`,
@@ -487,17 +574,15 @@
             qData.options = [item.m, others[0].m, others[1].m];
         }
 
-        renderQuizCard(container, qData, 'nato', true); // true = force refresh si nato
+        renderQuizCard(container, qData, 'nato', true);
     }
 
     function renderQuizCard(container, qData, cat, isNato = false) {
-        // Préparation des options
         let options = qData.options.map((opt, index) => {
             return { text: opt, isCorrect: (index === qData.a) };
         });
         options = options.sort(() => Math.random() - 0.5);
 
-        // Image handling
         let imageHTML = '';
         if (qData.img) {
             let imgClass = cat === 'nato' ? 'quiz-image flag-img-large' : 'quiz-image';
@@ -506,6 +591,9 @@
                     <img src="${qData.img}" class="${imgClass}" alt="Image" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'color:#999\\'>Image manquante<br>${qData.img}</span>'">
                 </div>`;
         }
+        
+        // Sécurisation de la chaîne pour éviter les bugs si elle contient des apostrophes
+        const safeInfo = qData.info.replace(/'/g, "\\'");
 
         container.innerHTML = `
             <div class="question-card">
@@ -513,7 +601,7 @@
                 <div class="question-text">${qData.q}</div>
                 <div class="options-grid">
                     ${options.map(opt => 
-                        `<button class="opt-btn" onclick="check(this, ${opt.isCorrect}, '${qData.info.replace(/'/g, "\\'")}')">${opt.text}</button>`
+                        `<button class="opt-btn" onclick="check(this, ${opt.isCorrect}, '${safeInfo}')">${opt.text}</button>`
                     ).join('')}
                 </div>
                 <div class="feedback-box"></div>
@@ -574,6 +662,67 @@
             }
             return char === ' ' ? '<div style="width:100%"></div>' : '';
         }).join('');
+    }
+
+    // --- GESTION CHECKLIST (SAC) ---
+    function setSacMode(mode) {
+        currentSacMode = mode;
+        // Mise à jour visuelle des boutons
+        document.getElementById('btn-sac-homme').classList.toggle('active', mode === 'homme');
+        document.getElementById('btn-sac-femme').classList.toggle('active', mode === 'femme');
+        // Recharger la liste
+        loadChecklist();
+    }
+
+    function loadChecklist() {
+        const container = document.getElementById('checklist-container');
+        container.innerHTML = "";
+        
+        // On récupère la bonne liste (homme ou femme)
+        const items = sacData[currentSacMode];
+        
+        items.forEach((item, index) => {
+            // Clé unique pour sauvegarder : pmm_sac_homme_0 ou pmm_sac_femme_0
+            const storageKey = `pmm_sac_${currentSacMode}_${index}`;
+            const isChecked = localStorage.getItem(storageKey) === 'true';
+            
+            const div = document.createElement('div');
+            div.style.padding = "15px 5px";
+            div.style.borderBottom = "1px solid #eee";
+            div.style.display = "flex";
+            div.style.alignItems = "center";
+            div.style.cursor = "pointer";
+            
+            // Interaction sur toute la ligne
+            div.onclick = (e) => {
+                if(e.target.type !== 'checkbox') {
+                    const chk = div.querySelector('input');
+                    chk.checked = !chk.checked;
+                    saveCheck(storageKey, chk.checked);
+                }
+            };
+
+            div.innerHTML = `
+                <input type="checkbox" id="chk_${index}" ${isChecked ? 'checked' : ''} 
+                    onchange="saveCheck('${storageKey}', this.checked)" 
+                    style="transform: scale(1.5); margin-right: 15px; cursor:pointer;">
+                <label for="chk_${index}" style="font-size:1.05rem; cursor:pointer; flex:1; ${isChecked ? 'text-decoration:line-through; color:#aaa;' : ''}">${item}</label>
+            `; 
+            container.appendChild(div);
+        });
+    }
+
+    function saveCheck(key, status) {
+        localStorage.setItem(key, status);
+        loadChecklist(); // Recharge pour le style visuel (barré)
+    }
+
+    function resetChecklist() {
+        if(confirm("Voulez-vous vraiment décocher toute la liste " + currentSacMode + " ?")) {
+            const items = sacData[currentSacMode];
+            items.forEach((_, i) => localStorage.removeItem(`pmm_sac_${currentSacMode}_${i}`));
+            loadChecklist();
+        }
     }
 
     // Init
