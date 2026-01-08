@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Révision PMM - Complète & G2</title>
+    <title>Révision PMM Belfort - 2025/2026</title>
     <style>
         :root {
             --navy-blue: #0f1e3d;
@@ -13,15 +13,34 @@
             --red: #b30000;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--light-grey); color: #333; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--light-grey); color: #333; display: flex; flex-direction: column; min-height: 100vh; }
 
         header {
             background: linear-gradient(135deg, var(--navy-blue), #162c5b);
             color: var(--white);
-            padding: 20px;
+            padding: 25px 20px;
             text-align: center;
-            border-bottom: 4px solid var(--gold);
+            border-bottom: 5px solid var(--gold);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
+
+        /* NOUVEAU STYLE POUR LE LOGO */
+        .header-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            background-color: var(--white);
+            object-fit: contain; /* Assure que le logo ne soit pas déformé */
+            padding: 2px;
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .subtitle { font-size: 1rem; color: #ddd; font-style: italic; margin-top: 5px; }
 
         nav {
             display: flex;
@@ -31,93 +50,121 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         nav button {
             background: none;
             border: none;
             color: #ccc;
-            padding: 15px 15px;
+            padding: 15px 20px;
             cursor: pointer;
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.9rem;
-            transition: 0.3s;
+            font-size: 0.95rem;
+            transition: all 0.3s;
             border-bottom: 3px solid transparent;
         }
 
         nav button:hover, nav button.active {
             color: var(--white);
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.1);
             border-bottom: 3px solid var(--gold);
         }
 
         main {
             max-width: 900px;
-            margin: 20px auto;
+            width: 95%;
+            margin: 30px auto;
             background: var(--white);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            min-height: 60vh;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            flex: 1; /* Pousse le footer vers le bas */
         }
 
-        .section-content { display: none; }
+        .section-content { display: none; animation: fadeIn 0.5s; }
         .section-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        h2 { color: var(--navy-blue); border-left: 5px solid var(--red); padding-left: 15px; margin-top: 0; }
+        h2 { color: var(--navy-blue); border-left: 6px solid var(--red); padding-left: 15px; margin-top: 0; }
         h3 { color: #555; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; }
 
         /* QUIZ STYLES */
-        .question-card { background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef; margin-bottom: 20px; }
-        .question-text { font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; color: var(--navy-blue); text-align: center; }
+        .question-card { background: #f8f9fa; padding: 25px; border-radius: 10px; border: 1px solid #e9ecef; margin-bottom: 20px; }
+        .question-text { font-size: 1.3rem; font-weight: bold; margin-bottom: 20px; color: var(--navy-blue); text-align: center; }
         
         .quiz-image {
             max-width: 100%;
             height: auto;
-            max-height: 250px;
+            max-height: 280px;
             display: block;
             margin: 0 auto 20px auto;
             border: 1px solid #ccc;
-            border-radius: 4px;
-            background: #eee;
+            border-radius: 8px;
+            background: #fff;
             object-fit: contain;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         .flag-quiz-img { max-height: 150px; border: 1px solid #999; }
 
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         @media(max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
 
         button.opt-btn {
             padding: 15px;
             border: 2px solid #e0e0e0;
             background: var(--white);
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 1rem;
             cursor: pointer;
             text-align: center;
-            font-weight: 500;
-            transition: 0.2s;
+            font-weight: 600;
+            transition: all 0.2s;
+            color: #444;
         }
-        button.opt-btn:hover:not(:disabled) { border-color: var(--navy-blue); background: #f0f4ff; }
+        button.opt-btn:hover:not(:disabled) { border-color: var(--navy-blue); background: #f0f4ff; color: var(--navy-blue); transform: translateY(-2px); }
         button.opt-btn:disabled { opacity: 0.7; cursor: default; }
 
-        .feedback-box { margin-top: 15px; padding: 15px; border-radius: 4px; display: none; text-align: center; }
-        .btn-next { background: var(--navy-blue); color: white; border: none; padding: 12px 30px; border-radius: 30px; margin: 15px auto 0 auto; cursor: pointer; display: block; font-weight: bold; }
+        .feedback-box { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; text-align: center; font-size: 1.1rem; }
+        .btn-next { background: var(--navy-blue); color: white; border: none; padding: 12px 35px; border-radius: 30px; margin: 20px auto 0 auto; cursor: pointer; display: block; font-weight: bold; font-size: 1rem; transition: background 0.3s; }
+        .btn-next:hover { background: #25407a; }
 
         /* TRADUCTION */
-        .translation-zone { background: #eef2f5; padding: 20px; border-radius: 8px; margin-top: 30px; }
-        .nato-input { width: 100%; padding: 12px; font-size: 1.1rem; border: 2px solid #ccc; border-radius: 4px; margin-bottom: 15px; box-sizing: border-box; }
-        .nato-output { background: #1a2f55; padding: 15px; border-radius: 6px; min-height: 60px; display: flex; flex-wrap: wrap; gap: 10px; color: #fff; }
-        .nato-item { display: flex; align-items: center; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 4px; font-family: monospace; font-weight: bold; }
-        .flag-icon-small { height: 25px; margin-right: 8px; border: 1px solid #555; }
+        .translation-zone { background: #eef2f5; padding: 25px; border-radius: 10px; margin-top: 30px; border: 1px solid #dee2e6; }
+        .nato-input { width: 100%; padding: 15px; font-size: 1.2rem; border: 2px solid #ccc; border-radius: 6px; margin-bottom: 15px; box-sizing: border-box; transition: border 0.3s; }
+        .nato-input:focus { border-color: var(--navy-blue); outline: none; }
+        .nato-output { background: #1a2f55; padding: 20px; border-radius: 8px; min-height: 70px; display: flex; flex-wrap: wrap; gap: 10px; color: #fff; align-items: center; }
+        .nato-item { display: flex; align-items: center; background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 6px; font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.1rem; }
+        .flag-icon-small { height: 30px; margin-right: 10px; border: 1px solid rgba(255,255,255,0.5); }
+
+        /* PIED DE PAGE (FOOTER) */
+        footer {
+            background-color: #12244a;
+            color: #8fa1b9;
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 0.9rem;
+            margin-top: auto; /* Colle le footer en bas */
+            border-top: 4px solid var(--gold);
+        }
+        .footer-credit {
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Marine Nationale - Révisions PMM Belfort</h1>
+    <img src="images/logo_pmm.png" alt="Logo PMM Belfort" class="header-logo" onerror="this.style.display='none'">
+    <div>
+        <h1>Marine Nationale - Révisions</h1>
+        <div class="subtitle">Préparation Militaire Marine de Belfort</div>
+    </div>
 </header>
 
 <nav>
@@ -142,8 +189,9 @@
         <h2>Code International</h2>
         <div id="quiz-nato" class="quiz-area"></div>
         <div class="translation-zone">
-            <h3>Traducteur</h3>
-            <input type="text" class="nato-input" placeholder="Tapez un message..." oninput="translateNato(this.value)">
+            <h3>Traducteur OTAN</h3>
+            <p>Tapez un mot pour voir sa traduction en pavillons :</p>
+            <input type="text" class="nato-input" placeholder="Tapez ici (ex: MATELOT)..." oninput="translateNato(this.value)">
             <div class="nato-output" id="nato-res"></div>
         </div>
     </div>
@@ -153,6 +201,12 @@
         <div id="quiz-famas" class="quiz-area"></div>
     </div>
 </main>
+
+<footer>
+    <div class="footer-credit">Site réalisé par un stagiaire de la PMM de Belfort</div>
+    <div>2025/2026</div>
+    <div style="margin-top: 10px; font-size: 0.8rem; opacity: 0.7;">Alexis Sartoris - Stagiaire</div>
+</footer>
 
 <script>
     // ================= BASE DE DONNÉES =================
@@ -380,6 +434,3 @@
 
 </body>
 </html>
-
-
-
