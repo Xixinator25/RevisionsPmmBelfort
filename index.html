@@ -7,50 +7,66 @@
     <style>
         :root {
             --navy-blue: #0f1e3d;
+            --navy-light: #162c5b;
             --gold: #c5a059;
             --white: #ffffff;
             --light-grey: #eef2f5;
             --red: #b30000;
+            --green: #28a745;
         }
 
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
             margin: 0; 
             background: var(--light-grey); 
             color: #333; 
             display: flex; 
             flex-direction: column; 
             min-height: 100vh;
-            -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu au clic sur mobile */
+            -webkit-tap-highlight-color: transparent;
         }
 
+        /* --- EN-TÊTE --- */
         header {
-            background: linear-gradient(135deg, var(--navy-blue), #162c5b);
+            background: linear-gradient(135deg, var(--navy-blue), var(--navy-light));
             color: var(--white);
             padding: 15px;
             text-align: center;
             border-bottom: 4px solid var(--gold);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 15px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            position: relative;
         }
 
         .header-logo {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             border: 2px solid var(--gold);
-            background-color: var(--white);
+            background: var(--white);
             object-fit: contain;
             padding: 2px;
         }
 
-        h1 { margin: 0; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
-        .subtitle { font-size: 0.9rem; color: #ddd; font-style: italic; margin-top: 3px; }
+        .header-text h1 { margin: 0; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+        .header-text .subtitle { font-size: 0.8rem; color: #ddd; font-style: italic; margin-top: 2px; }
 
-        /* NAVIGATION OPTIMISÉE MOBILE */
+        .score-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.3);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid var(--gold);
+        }
+
+        /* --- NAVIGATION --- */
         nav {
             display: flex;
             background: #12244a;
@@ -58,51 +74,39 @@
             top: 0;
             z-index: 1000;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            overflow-x: auto; /* Permet le scroll horizontal si petit écran */
+            overflow-x: auto;
             white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
         }
 
         nav button {
             background: none;
             border: none;
             color: #ccc;
-            padding: 15px 10px;
+            padding: 15px 15px;
             cursor: pointer;
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.85rem;
             transition: all 0.2s;
             border-bottom: 3px solid transparent;
-            flex: 1; /* Les boutons prennent toute la largeur dispo */
-            min-width: 70px; /* Largeur min pour être cliquable */
+            flex: 1;
+            min-width: 80px;
         }
 
-        nav button:hover, nav button.active {
+        nav button.active {
             color: var(--white);
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
             border-bottom: 3px solid var(--gold);
         }
 
+        /* --- CONTENU --- */
         main {
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
-            background: var(--light-grey); /* Fond gris sur mobile pour contraste */
             padding: 15px;
-            box-sizing: border-box; /* Important pour que le padding ne déborde pas */
+            box-sizing: border-box;
             flex: 1;
-        }
-
-        /* Sur grand écran, on garde le style "carte" */
-        @media (min-width: 768px) {
-            main {
-                background: var(--white);
-                margin: 30px auto;
-                padding: 30px;
-                border-radius: 12px;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            }
         }
 
         .section-content { display: none; animation: fadeIn 0.3s ease-out; }
@@ -113,142 +117,136 @@
             color: var(--navy-blue); 
             border-left: 5px solid var(--red); 
             padding-left: 10px; 
-            margin-top: 0; 
-            margin-bottom: 15px;
+            margin: 0 0 15px 0;
             font-size: 1.3rem;
         }
 
-        /* CARTES DE QUESTION */
+        /* Sous-menu pour NATO */
+        .sub-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+        .sub-nav button {
+            background: #fff;
+            border: 1px solid var(--navy-blue);
+            color: var(--navy-blue);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .sub-nav button.active {
+            background: var(--navy-blue);
+            color: white;
+        }
+
+        /* --- CARTE QUESTION --- */
         .question-card { 
             background: #fff; 
-            padding: 15px; 
-            border-radius: 12px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             margin-bottom: 20px; 
-            border: 1px solid #e0e0e0;
+            border: 1px solid #eee;
+            text-align: center;
         }
         
         .question-text { 
-            font-size: 1.15rem; 
+            font-size: 1.2rem; 
             font-weight: 700; 
             margin: 15px 0; 
             color: var(--navy-blue); 
-            text-align: center; 
-            line-height: 1.4;
         }
         
+        .quiz-image-container {
+            width: 100%;
+            height: 180px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+        }
+
         .quiz-image {
             max-width: 100%;
-            height: auto;
-            max-height: 200px; /* Plus petit sur mobile pour voir les réponses sans scroller */
-            display: block;
-            margin: 0 auto 10px auto;
-            border-radius: 8px;
+            max-height: 100%;
             object-fit: contain;
-            background-color: #f9f9f9;
         }
+        .flag-img-large { height: 120px; width: auto; }
         
-        /* Sur tablette/PC on agrandit l'image */
-        @media (min-width: 768px) {
-            .quiz-image { max-height: 300px; margin-bottom: 20px; }
-        }
-
-        .flag-quiz-img { max-height: 120px; border: 1px solid #ddd; }
-
-        /* GRILLE DE RÉPONSES */
+        /* --- GRILLE RÉPONSES --- */
         .options-grid { 
             display: grid; 
-            grid-template-columns: 1fr; /* Une seule colonne par défaut (Mobile First) */
-            gap: 10px; 
+            grid-template-columns: 1fr; 
+            gap: 12px; 
         }
-        
-        @media (min-width: 600px) { 
-            .options-grid { grid-template-columns: 1fr 1fr; gap: 15px; } 
-        }
+        @media (min-width: 600px) { .options-grid { grid-template-columns: 1fr 1fr; } }
 
         button.opt-btn {
-            padding: 16px 12px; /* Zone de touche confortable */
+            padding: 16px;
             border: 2px solid #e0e0e0;
             background: var(--white);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
             cursor: pointer;
-            text-align: center;
             font-weight: 600;
             color: #444;
-            transition: transform 0.1s, background 0.2s;
-            width: 100%; /* Prend toute la largeur */
-            touch-action: manipulation; /* Optimise la réactivité tactile */
+            transition: all 0.2s;
+            touch-action: manipulation;
+            white-space: normal; /* Permet le texte sur plusieurs lignes */
+            line-height: 1.3;
         }
         
         button.opt-btn:active { transform: scale(0.98); }
-        button.opt-btn:disabled { opacity: 0.8; transform: none; }
+        button.opt-btn:disabled { opacity: 0.9; cursor: default; }
 
+        /* --- FEEDBACK --- */
         .feedback-box { 
-            margin-top: 15px; 
+            margin-top: 20px; 
             padding: 15px; 
-            border-radius: 8px; 
+            border-radius: 10px; 
             display: none; 
-            text-align: center; 
-            font-size: 1rem; 
+            text-align: left;
             animation: popIn 0.3s;
         }
-        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         .btn-next { 
             background: var(--navy-blue); 
             color: white; 
             border: none; 
-            padding: 14px 0; 
-            width: 100%; /* Bouton large sur mobile */
+            padding: 16px; 
+            width: 100%; 
             border-radius: 30px; 
-            margin: 15px auto 0 auto; 
+            margin-top: 15px; 
             cursor: pointer; 
-            display: block; 
             font-weight: bold; 
             font-size: 1.1rem; 
-            box-shadow: 0 4px 6px rgba(15, 30, 61, 0.3);
-        }
-        
-        @media (min-width: 600px) {
-            .btn-next { width: auto; padding: 12px 40px; }
+            box-shadow: 0 4px 10px rgba(15, 30, 61, 0.4);
+            display: none;
         }
 
-        /* TRADUCTEUR */
-        .translation-zone { background: #fff; padding: 20px; border-radius: 12px; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        /* --- TRADUCTEUR --- */
+        .translation-zone { background: #fff; padding: 20px; border-radius: 12px; margin-top: 20px; }
         .nato-input { 
-            width: 100%; 
-            padding: 12px; 
-            font-size: 1.1rem; 
-            border: 2px solid #ccc; 
-            border-radius: 8px; 
-            margin-bottom: 15px; 
-            box-sizing: border-box; 
-            -webkit-appearance: none; /* Enlève le style par défaut iOS */
+            width: 100%; padding: 12px; font-size: 1.1rem; border: 2px solid #ccc; 
+            border-radius: 8px; box-sizing: border-box; margin-bottom: 10px;
         }
         .nato-output { 
-            background: #1a2f55; 
-            padding: 15px; 
-            border-radius: 8px; 
-            min-height: 60px; 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 8px; 
-            color: #fff; 
-            align-items: center; 
-            justify-content: center;
+            background: #1a2f55; padding: 15px; border-radius: 8px; min-height: 50px; 
+            display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
         }
         .nato-item { 
-            display: flex; 
-            align-items: center; 
-            background: rgba(255,255,255,0.15); 
-            padding: 6px 10px; 
-            border-radius: 4px; 
-            font-family: monospace; 
-            font-weight: bold; 
-            font-size: 0.95rem; 
+            background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 4px; 
+            color: white; font-family: monospace; font-weight: bold; display: flex; align-items: center;
         }
-        .flag-icon-small { height: 24px; margin-right: 8px; border: 1px solid rgba(255,255,255,0.3); }
+        .nato-flag-mini { height: 20px; margin-right: 8px; border: 1px solid #fff; }
 
         footer {
             background-color: #12244a;
@@ -259,98 +257,126 @@
             margin-top: auto;
             border-top: 4px solid var(--gold);
         }
-        .footer-credit { color: var(--white); font-weight: bold; font-size: 0.95rem; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
 <header>
-    <img src="images/logo_pmm.png" alt="Logo PMM Belfort" class="header-logo" onerror="this.style.display='none'">
-    <div>
-        <h1>Marine Nationale</h1>
-        <div class="subtitle">PMM Belfort - Révisions</div>
+    <div class="score-display">Score: <span id="score-val">0</span></div>
+    <img src="images/logo_pmm.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
+    <div class="header-text">
+        <h1>PMM Belfort</h1>
+        <div class="subtitle">Entraînement & Révisions</div>
     </div>
 </header>
 
 <nav>
     <button onclick="switchTab('grades')" class="active">Grades</button>
     <button onclick="switchTab('navires')">Navires</button>
-    <button onclick="switchTab('nato')">Drapeaux</button>
-    <button onclick="switchTab('famas')">FAMAS G2</button>
+    <button onclick="switchTab('nato')">Code Int.</button>
+    <button onclick="switchTab('famas')">FAMAS</button>
 </nav>
 
 <main>
     <div id="grades" class="section-content active">
-        <h2>Grades</h2>
-        <div id="quiz-grades" class="quiz-area"></div>
+        <h2>Grades & Galons</h2>
+        <div id="quiz-grades"></div>
     </div>
 
     <div id="navires" class="section-content">
-        <h2>Navires</h2>
-        <div id="quiz-navires" class="quiz-area"></div>
+        <h2>Bâtiments de Surface</h2>
+        <div id="quiz-navires"></div>
     </div>
 
     <div id="nato" class="section-content">
         <h2>Code International</h2>
-        <div id="quiz-nato" class="quiz-area"></div>
+        
+        <div class="sub-nav">
+            <button onclick="setNatoMode('letter')" id="btn-nato-letter" class="active">Alphabet</button>
+            <button onclick="setNatoMode('meaning')" id="btn-nato-meaning">Significations</button>
+        </div>
+
+        <div id="quiz-nato"></div>
+        
         <div class="translation-zone">
-            <h3 style="margin-top:0; color:var(--navy-blue);">Traducteur OTAN</h3>
-            <p style="font-size:0.9rem; color:#666;">Tapez un mot (ex: MARINE) :</p>
-            <input type="text" class="nato-input" placeholder="Votre texte ici..." oninput="translateNato(this.value)">
-            <div class="nato-output" id="nato-res"></div>
+            <h3>Traducteur OTAN</h3>
+            <input type="text" class="nato-input" placeholder="Tape ton texte..." oninput="translateNato(this.value)">
+            <div class="nato-output" id="nato-res"><span style="color:#aaa; font-style:italic;">Résultat...</span></div>
         </div>
     </div>
 
     <div id="famas" class="section-content">
         <h2>FAMAS G2</h2>
-        <div id="quiz-famas" class="quiz-area"></div>
+        <div id="quiz-famas"></div>
     </div>
 </main>
 
 <footer>
-    <div class="footer-credit">Site réalisé par un stagiaire de la PMM de Belfort</div>
-    <div>2025/2026</div>
-    <div style="margin-top: 8px; opacity: 0.6;">Alexis Sartoris - Stagiaire</div>
+    <div style="color:white; font-weight:bold; margin-bottom:5px;">Site réalisé par un stagiaire de la PMM de Belfort</div>
+    <div>Alexis Sartoris - PMM Belfort - 2025/2026</div>
 </footer>
 
 <script>
-    // ================= BASE DE DONNÉES =================
+    let currentScore = 0;
+    let currentNatoMode = 'letter'; // 'letter' ou 'meaning'
+
+    // --- DONNÉES NATO (Source Unique pour générer les 2 modes) ---
+    const natoData = [
+        { l: "A", name: "ALFA", m: "J'ai un scaphandrier en plongée.", img: "images/flag_a.png" },
+        { l: "B", name: "BRAVO", m: "Je charge/décharge des matières dangereuses.", img: "images/flag_b.png" },
+        { l: "C", name: "CHARLIE", m: "Affirmation (OUI).", img: "images/flag_c.png" },
+        { l: "D", name: "DELTA", m: "Ne me gênez pas, je manœuvre avec difficulté.", img: "images/flag_d.png" },
+        { l: "E", name: "ECHO", m: "Je viens sur tribord.", img: "images/flag_e.png" },
+        { l: "F", name: "FOXTROT", m: "Je suis désemparé, communiquez avec moi.", img: "images/flag_f.png" },
+        { l: "G", name: "GOLF", m: "J'ai besoin d'un pilote.", img: "images/flag_g.png" },
+        { l: "H", name: "HOTEL", m: "J'ai un pilote à bord.", img: "images/flag_h.png" },
+        { l: "I", name: "INDIA", m: "Je viens sur bâbord.", img: "images/flag_i.png" },
+        { l: "J", name: "JULIETT", m: "Incendie à bord, écartez-vous.", img: "images/flag_j.png" },
+        { l: "K", name: "KILO", m: "Je désire communiquer.", img: "images/flag_k.png" },
+        { l: "L", name: "LIMA", m: "Stoppez votre navire.", img: "images/flag_l.png" },
+        { l: "M", name: "MIKE", m: "Mon navire est stoppé.", img: "images/flag_m.png" },
+        { l: "N", name: "NOVEMBER", m: "Négatif (NON).", img: "images/flag_n.png" },
+        { l: "O", name: "OSCAR", m: "Homme à la mer.", img: "images/flag_o.png" },
+        { l: "P", name: "PAPA", m: "Rappel des équipages / Filets accrochés.", img: "images/flag_p.png" },
+        { l: "Q", name: "QUEBEC", m: "Demande libre pratique (Santé).", img: "images/flag_q.png" },
+        { l: "R", name: "ROMEO", m: "Pas de signification particulière isolée.", img: "images/flag_r.png" },
+        { l: "S", name: "SIERRA", m: "Je bats en arrière.", img: "images/flag_s.png" },
+        { l: "T", name: "TANGO", m: "Ne me gênez pas, chalutage en cours.", img: "images/flag_t.png" },
+        { l: "U", name: "UNIFORM", m: "Vous courez vers un danger.", img: "images/flag_u.png" },
+        { l: "V", name: "VICTOR", m: "Je demande assistance.", img: "images/flag_v.png" },
+        { l: "W", name: "WHISKEY", m: "Demande assistance médicale.", img: "images/flag_w.png" },
+        { l: "X", name: "X-RAY", m: "Arrêtez vos manœuvres et veillez mes signaux.", img: "images/flag_x.png" },
+        { l: "Y", name: "YANKEE", m: "Je chasse sur mon ancre.", img: "images/flag_y.png" },
+        { l: "Z", name: "ZULU", m: "J'ai besoin d'un remorqueur.", img: "images/flag_z.png" }
+    ];
+
+    // --- BASE DE DONNÉES QUIZ ---
     const db = {
         grades: [
-            // --- EQUIPAGES ---
             { img: "images/grade_matelot.jpg", q: "Quel est ce grade ?", options: ["Matelot", "Quartier-Maître de 2ème classe", "Mousse"], a: 0, info: "Pas de galon = Matelot." },
             { img: "images/grade_qm2.jpg", q: "Quel est ce grade ?", options: ["Matelot", "Quartier-Maître de 2ème classe", "Quartier-Maître de 1ère classe"], a: 1, info: "2 chevrons rouges = Quartier-Maître de 2ème classe." },
             { img: "images/grade_qm1.jpg", q: "Quel est ce grade ?", options: ["Quartier-Maître de 2ème classe", "Quartier-Maître de 1ère classe", "Second Maître"], a: 1, info: "1 chevron rouge = Quartier-Maître de 1ère classe." },
-            
-            // --- ÉLÈVES MAISTRANCIERS ---
-            { img: "images/grade_sm_maistrancier.jpg", q: "Quel est ce grade (barré de rouge) ?", options: ["Second Maître Maistrancier", "Second Maître", "Quartier-Maître"], a: 0, info: "Second Maître Maistrancier. Appellation : 'élève maistrancier'." },
-            { img: "images/grade_sm_brevete.jpg", q: "Quel est ce grade (barré de bleu) ?", options: ["Second Maître Maistrancier", "Second Maître Breveté Maistrancier", "Maître"], a: 1, info: "Second Maître Breveté Maistrancier. Appellation : 'second maître maistrancier'." },
-
-            // --- OFFICIERS MARINIERS ---
-            { img: "images/grade_sm.jpg", q: "Quel est ce grade ?", options: ["Second Maître", "Maître", "Premier Maître"], a: 0, info: "2 chevrons or = Second Maître. (Appellation : 'Maître')." },
+            { img: "images/grade_sm_maistrancier.jpg", q: "Quel est ce grade (barré de rouge) ?", options: ["Second Maître Maistrancier", "Second Maître", "Quartier-Maître"], a: 0, info: "Second Maître Maistrancier (Élève)." },
+            { img: "images/grade_sm_brevete.jpg", q: "Quel est ce grade (barré de bleu) ?", options: ["Second Maître Maistrancier", "Second Maître Breveté Maistrancier", "Maître"], a: 1, info: "Second Maître Breveté Maistrancier." },
+            { img: "images/grade_sm.jpg", q: "Quel est ce grade ?", options: ["Second Maître", "Maître", "Premier Maître"], a: 0, info: "2 chevrons or = Second Maître." },
             { img: "images/grade_m.jpg", q: "Quel est ce grade ?", options: ["Second Maître", "Maître", "Premier Maître"], a: 1, info: "3 chevrons or = Maître." },
             { img: "images/grade_pm.jpg", q: "Quel est ce grade ?", options: ["Maître", "Premier Maître", "Maître Principal"], a: 1, info: "1 galon or = Premier Maître." },
-            { img: "images/grade_mp.jpg", q: "Quel est ce grade ?", options: ["Premier Maître", "Maître Principal", "Major"], a: 1, info: "1 galon or 'sabordé' (avec filet argent) = Maître Principal. (Appellation : 'Cipal')." },
-            { img: "images/grade_major.jpg", q: "Quel est ce grade ?", options: ["Maître Principal", "Major", "Aspirant"], a: 1, info: "1 galon or surmonté d'une ancre = Major. (Appellation : 'Major')." },
-
-            // --- OFFICIERS SUBALTERNES ---
-            { img: "images/grade_asp.jpg", q: "Quel est ce grade ?", options: ["Aspirant", "Enseigne de Vaisseau de 2ème classe", "Enseigne de Vaisseau de 1ère classe"], a: 0, info: "1 galon or coupé de 3 interruptions = Aspirant. (Appellation : 'Lieutenant')." },
+            { img: "images/grade_mp.jpg", q: "Quel est ce grade ?", options: ["Premier Maître", "Maître Principal", "Major"], a: 1, info: "1 galon or 'sabordé' = Maître Principal (Cipal)." },
+            { img: "images/grade_major.jpg", q: "Quel est ce grade ?", options: ["Maître Principal", "Major", "Aspirant"], a: 1, info: "1 galon or + ancre = Major." },
+            { img: "images/grade_asp.jpg", q: "Quel est ce grade ?", options: ["Aspirant", "Enseigne de Vaisseau de 2ème classe", "Enseigne de Vaisseau de 1ère classe"], a: 0, info: "1 galon or coupé = Aspirant (Lieutenant)." },
             { img: "images/grade_ev2.jpg", q: "Quel est ce grade ?", options: ["Aspirant", "Enseigne de Vaisseau de 2ème classe", "Enseigne de Vaisseau de 1ère classe"], a: 1, info: "1 galon or = Enseigne de Vaisseau de 2ème classe." },
             { img: "images/grade_ev1.jpg", q: "Quel est ce grade ?", options: ["Enseigne de Vaisseau de 2ème classe", "Enseigne de Vaisseau de 1ère classe", "Lieutenant de Vaisseau"], a: 1, info: "2 galons or = Enseigne de Vaisseau de 1ère classe." },
-            { img: "images/grade_lv.jpg", q: "Quel est ce grade ?", options: ["Enseigne de Vaisseau de 1ère classe", "Lieutenant de Vaisseau", "Capitaine de Corvette"], a: 1, info: "3 galons or = Lieutenant de Vaisseau. (Appellation : 'Capitaine')." },
-
-            // --- OFFICIERS SUPÉRIEURS ---
-            { img: "images/grade_cc.jpg", q: "Quel est ce grade ?", options: ["Lieutenant de Vaisseau", "Capitaine de Corvette", "Capitaine de Frégate"], a: 1, info: "4 galons panachés (Or et Argent) = Capitaine de Corvette. (Appellation : 'Commandant')." },
-            { img: "images/grade_cf.jpg", q: "Quel est ce grade ?", options: ["Capitaine de Corvette", "Capitaine de Frégate", "Capitaine de Vaisseau"], a: 1, info: "5 galons panachés (3 Or, 2 Argent) = Capitaine de Frégate. (Appellation : 'Commandant')." },
-            { img: "images/grade_cv.jpg", q: "Quel est ce grade ?", options: ["Capitaine de Frégate", "Capitaine de Vaisseau", "Contre-Amiral"], a: 1, info: "5 galons or = Capitaine de Vaisseau. (Appellation : 'Commandant')." },
-
-            // --- OFFICIERS GÉNÉRAUX ---
+            { img: "images/grade_lv.jpg", q: "Quel est ce grade ?", options: ["Enseigne de Vaisseau de 1ère classe", "Lieutenant de Vaisseau", "Capitaine de Corvette"], a: 1, info: "3 galons or = Lieutenant de Vaisseau (Capitaine)." },
+            { img: "images/grade_cc.jpg", q: "Quel est ce grade ?", options: ["Lieutenant de Vaisseau", "Capitaine de Corvette", "Capitaine de Frégate"], a: 1, info: "4 galons panachés = Capitaine de Corvette (Commandant)." },
+            { img: "images/grade_cf.jpg", q: "Quel est ce grade ?", options: ["Capitaine de Corvette", "Capitaine de Frégate", "Capitaine de Vaisseau"], a: 1, info: "5 galons panachés (3 Or, 2 Argent) = Capitaine de Frégate." },
+            { img: "images/grade_cv.jpg", q: "Quel est ce grade ?", options: ["Capitaine de Frégate", "Capitaine de Vaisseau", "Contre-Amiral"], a: 1, info: "5 galons or = Capitaine de Vaisseau." },
             { img: "images/grade_ca.jpg", q: "Quel est ce grade ?", options: ["Capitaine de Vaisseau", "Contre-Amiral", "Vice-Amiral"], a: 1, info: "2 étoiles = Contre-Amiral." },
             { img: "images/grade_va.jpg", q: "Quel est ce grade ?", options: ["Contre-Amiral", "Vice-Amiral", "Vice-Amiral d'Escadre"], a: 1, info: "3 étoiles = Vice-Amiral." },
             { img: "images/grade_vae.jpg", q: "Quel est ce grade ?", options: ["Vice-Amiral", "Vice-Amiral d'Escadre", "Amiral"], a: 1, info: "4 étoiles = Vice-Amiral d'Escadre." },
             { img: "images/grade_amiral.jpg", q: "Quel est ce grade ?", options: ["Vice-Amiral d'Escadre", "Amiral", "Amiral de France"], a: 1, info: "5 étoiles = Amiral." }
         ],
 
+        // LISTE ORIGINALE DU NAVIRE - INCHANGÉE
         navires: [
             { img: "images/navire_pa.jpg", q: "Type de bâtiment ?", options: ["Porte-Avions", "Porte-Hélicoptères Amphibie", "Bâtiment Ravitailleur"], a: 0, info: "Porte-Avions (Charles de Gaulle)." },
             { img: "images/navire_fremm.jpg", q: "Type de bâtiment ?", options: ["Frégate de Surveillance", "Frégate Multi-Missions", "Patrouilleur de Haute Mer"], a: 1, info: "Frégate Multi-Missions (FREMM)." },
@@ -380,76 +406,22 @@
             { img: "images/navire_eda.jpg", q: "Type de bâtiment ?", options: ["Engin de Débarquement Amphibie", "Patrouilleur", "Remorqueur"], a: 0, info: "Engin de Débarquement Amphibie (EDA)." }
         ],
 
-        nato: [
-            { img: "images/flag_a.png", q: "Signification ?", options: ["ALFA", "BRAVO", "ZULU"], a: 0, info: "ALFA (A) - J'ai un scaphandrier en plongée." },
-            { img: "images/flag_b.png", q: "Signification ?", options: ["BRAVO", "CHARLIE", "DELTA"], a: 0, info: "BRAVO (B) - Je charge/décharge des matières dangereuses." },
-            { img: "images/flag_c.png", q: "Signification ?", options: ["CHARLIE", "ECHO", "FOXTROT"], a: 0, info: "CHARLIE (C) - Affirmation." },
-            { img: "images/flag_d.png", q: "Signification ?", options: ["DELTA", "BRAVO", "ALFA"], a: 0, info: "DELTA (D) - Ne me gênez pas, je manœuvre avec difficulté." },
-            { img: "images/flag_e.png", q: "Signification ?", options: ["ECHO", "INDIA", "JULIETT"], a: 0, info: "ECHO (E) - Je viens sur tribord." },
-            { img: "images/flag_f.png", q: "Signification ?", options: ["FOXTROT", "GOLF", "HOTEL"], a: 0, info: "FOXTROT (F) - Je suis désemparé." },
-            { img: "images/flag_g.png", q: "Signification ?", options: ["GOLF", "LIMA", "MIKE"], a: 0, info: "GOLF (G) - J'ai besoin d'un pilote." },
-            { img: "images/flag_h.png", q: "Signification ?", options: ["HOTEL", "INDIA", "KILO"], a: 0, info: "HOTEL (H) - J'ai un pilote à bord." },
-            { img: "images/flag_i.png", q: "Signification ?", options: ["INDIA", "JULIETT", "OSCAR"], a: 0, info: "INDIA (I) - Je viens sur bâbord." },
-            { img: "images/flag_j.png", q: "Signification ?", options: ["JULIETT", "KILO", "LIMA"], a: 0, info: "JULIETT (J) - Incendie à bord." },
-            { img: "images/flag_k.png", q: "Signification ?", options: ["KILO", "MIKE", "NOVEMBER"], a: 0, info: "KILO (K) - Je désire communiquer." },
-            { img: "images/flag_l.png", q: "Signification ?", options: ["LIMA", "PAPA", "QUEBEC"], a: 0, info: "LIMA (L) - Stoppez votre navire." },
-            { img: "images/flag_m.png", q: "Signification ?", options: ["MIKE", "NOVEMBER", "OSCAR"], a: 0, info: "MIKE (M) - Mon navire est stoppé." },
-            { img: "images/flag_n.png", q: "Signification ?", options: ["NOVEMBER", "CHARLIE", "SIERRA"], a: 0, info: "NOVEMBER (N) - Négatif." },
-            { img: "images/flag_o.png", q: "Signification ?", options: ["OSCAR", "PAPA", "ROMEO"], a: 0, info: "OSCAR (O) - Homme à la mer." },
-            { img: "images/flag_p.png", q: "Signification ?", options: ["PAPA", "QUEBEC", "ROMEO"], a: 0, info: "PAPA (P) - Rappel des équipages / Filets accrochés." },
-            { img: "images/flag_q.png", q: "Signification ?", options: ["QUEBEC", "SIERRA", "TANGO"], a: 0, info: "QUEBEC (Q) - Demande libre pratique." },
-            { img: "images/flag_r.png", q: "Signification ?", options: ["ROMEO", "UNIFORM", "VICTOR"], a: 0, info: "ROMEO (R) - Pas de signification particulière isolée." },
-            { img: "images/flag_s.png", q: "Signification ?", options: ["SIERRA", "TANGO", "UNIFORM"], a: 0, info: "SIERRA (S) - Je bats en arrière." },
-            { img: "images/flag_t.png", q: "Signification ?", options: ["TANGO", "VICTOR", "WHISKEY"], a: 0, info: "TANGO (T) - Chalutage en cours." },
-            { img: "images/flag_u.png", q: "Signification ?", options: ["UNIFORM", "WHISKEY", "X-RAY"], a: 0, info: "UNIFORM (U) - Vous courez vers un danger." },
-            { img: "images/flag_v.png", q: "Signification ?", options: ["VICTOR", "X-RAY", "YANKEE"], a: 0, info: "VICTOR (V) - Je demande assistance." },
-            { img: "images/flag_w.png", q: "Signification ?", options: ["WHISKEY", "YANKEE", "ZULU"], a: 0, info: "WHISKEY (W) - Assistance médicale." },
-            { img: "images/flag_x.png", q: "Signification ?", options: ["X-RAY", "ZULU", "ALFA"], a: 0, info: "X-RAY (X) - Veillez mes signaux." },
-            { img: "images/flag_y.png", q: "Signification ?", options: ["YANKEE", "ALFA", "BRAVO"], a: 0, info: "YANKEE (Y) - Je chasse sur mon ancre." },
-            { img: "images/flag_z.png", q: "Signification ?", options: ["ZULU", "KILO", "MIKE"], a: 0, info: "ZULU (Z) - J'ai besoin d'un remorqueur." }
-        ],
-
         famas: [
-            // --- PIÈCES EXISTANTES ---
-            { img: "images/famas_ensemble_mobile.jpg", q: "Quelle est cette pièce centrale ?", options: ["L'ensemble mobile", "La culasse", "Le percuteur"], a: 0, info: "L'ensemble mobile (qui contient la culasse, le percuteur, la masse additionnelle...)." },
-            { img: "images/famas_chargeur.jpg", q: "Quelle est la contenance de ce chargeur (G2) ?", options: ["30 cartouches", "25 cartouches", "20 cartouches"], a: 0, info: "30 cartouches pour le FAMAS G2 (standard OTAN)" },
-            { img: "images/famas_selecteur.jpg", q: "Que signifie la position '1' sur le sélecteur ?", options: ["Coup par coup (Semi-auto)", "Rafale", "Sûreté"], a: 0, info: "1 = Tir en coup par coup" },
-
-            // --- NOUVELLES IMAGES (A RAJOUTER) ---
-            { img: "images/famas_general.jpg", q: "Quel est le modèle de cette arme ?", options: ["FAMAS G2", "FAMAS F1", "HK 416"], a: 0, info: "C'est le FAMAS G2 (reconnaissable à son grand pontet et son chargeur courbé type M16)." },
-            
-            { img: "images/famas_boitier.jpg", q: "Comment s'appelle cette pièce ?", options: ["Boîtier de mécanisme", "Ensemble mobile", "Poignée garde-main"], a: 0, info: "Le Boîtier de Mécanisme. C'est la PIÈCE DE SÉCURITÉ de l'arme" },
-            
-            { img: "images/famas_limiteur.jpg", q: "C'est le boîtier de mécanisme. À quoi sert la commande '0' ou '3' ?", options: ["Limiteur de rafale", "Sélecteur de tir", "Sûreté"], a: 0, info: "C'est le Limiteur de Rafale (sous la crosse). 0 = Rafale libre, 3 = Rafale de 3 coups." },
-            
-            { img: "images/famas_poignee.jpg", q: "Identifiez cet ensemble :", options: ["Poignée Garde-Main (PGM)", "Crosse", "Canon"], a: 0, info: "La Poignée Garde-Main. Elle porte le bipied et les alidades de visée." },
-            
-            { img: "images/famas_crosse.jpg", q: "Sur la crosse, la pièce mobile permettant de viser s'appelle :", options: ["L'appui-joue", "L'amortisseur", "La fenêtre d'éjection"], a: 0, info: "L'appui-joue. Il est réversible (pour tireur droitier ou gaucher)." },
-
-            // --- QUESTIONS SANS IMAGE (CONNAISSANCES PURES DU PDF) ---
-            { q: "Quelle est la portée pratique du FAMAS G2 ?", options: ["300 m", "200 m", "600 m"], a: 0, info: "300 mètres (pour une portée maximale de 2500m)" },
-            { q: "Quelle est la cadence de tir théorique ?", options: ["1000 coups/mn", "600 coups/mn", "100 coups/mn"], a: 0, info: "1000 coups/minute (c'est très rapide !)" },
-            { q: "Le FAMAS G2 est conçu pour tirer des grenades...", options: ["Mixtes (Anti-Personnel / Anti-Véhicule)", "Uniquement fumigènes", "De 120mm"], a: 0, info: "Il tire des grenades mixtes (AP/AV 40mm) ou antichar (58mm)" }
+            { img: "images/famas_ensemble_mobile.jpg", q: "Quelle est cette pièce centrale ?", options: ["L'ensemble mobile", "La culasse", "Le percuteur"], a: 0, info: "L'ensemble mobile." },
+            { img: "images/famas_chargeur.jpg", q: "Contenance du chargeur (G2) ?", options: ["30 cartouches", "25 cartouches", "20 cartouches"], a: 0, info: "30 cartouches (Standard OTAN)." },
+            { img: "images/famas_selecteur.jpg", q: "Position '1' sur le sélecteur ?", options: ["Semi-auto (Coup par coup)", "Rafale", "Sûreté"], a: 0, info: "1 = Tir en coup par coup." },
+            { img: "images/famas_general.jpg", q: "Quel est ce modèle ?", options: ["FAMAS G2", "FAMAS F1", "HK 416"], a: 0, info: "FAMAS G2 (Pontet large)." },
+            { img: "images/famas_boitier.jpg", q: "Nom de cette pièce ?", options: ["Boîtier de mécanisme", "Ensemble mobile", "PGM"], a: 0, info: "Boîtier de Mécanisme (Pièce de sécurité)." },
+            { img: "images/famas_limiteur.jpg", q: "À quoi sert la commande '0' ou '3' ?", options: ["Limiteur de rafale", "Sélecteur de tir", "Sûreté"], a: 0, info: "Limiteur de Rafale (0=Libre, 3=Trois coups)." },
+            { img: "images/famas_poignee.jpg", q: "Identifiez cet ensemble :", options: ["Poignée Garde-Main (PGM)", "Crosse", "Canon"], a: 0, info: "Poignée Garde-Main." },
+            { img: "images/famas_crosse.jpg", q: "Pièce mobile pour viser sur la crosse ?", options: ["L'appui-joue", "L'amortisseur", "La fenêtre d'éjection"], a: 0, info: "L'appui-joue." },
+            { q: "Portée pratique du FAMAS G2 ?", options: ["300 m", "200 m", "600 m"], a: 0, info: "300 mètres." },
+            { q: "Cadence de tir théorique ?", options: ["1000 coups/mn", "600 coups/mn", "100 coups/mn"], a: 0, info: "1000 à 1100 coups/minute." },
+            { q: "Grenades tirées par le FAMAS ?", options: ["Mixtes (AP/AV)", "Fumigènes", "De 120mm"], a: 0, info: "Grenades Mixtes (Anti-Personnel / Anti-Véhicule)." }
         ]
     };
 
-    const natoAlphabet = {
-        'A': 'flag_a.png', 'B': 'flag_b.png', 'C': 'flag_c.png', 'D': 'flag_d.png', 'E': 'flag_e.png', 
-        'F': 'flag_f.png', 'G': 'flag_g.png', 'H': 'flag_h.png', 'I': 'flag_i.png', 'J': 'flag_j.png', 
-        'K': 'flag_k.png', 'L': 'flag_l.png', 'M': 'flag_m.png', 'N': 'flag_n.png', 'O': 'flag_o.png', 
-        'P': 'flag_p.png', 'Q': 'flag_q.png', 'R': 'flag_r.png', 'S': 'flag_s.png', 'T': 'flag_t.png', 
-        'U': 'flag_u.png', 'V': 'flag_v.png', 'W': 'flag_w.png', 'X': 'flag_x.png', 'Y': 'flag_y.png', 
-        'Z': 'flag_z.png'
-    };
-    const natoNames = {
-        'A': 'ALFA', 'B': 'BRAVO', 'C': 'CHARLIE', 'D': 'DELTA', 'E': 'ECHO', 'F': 'FOXTROT',
-        'G': 'GOLF', 'H': 'HOTEL', 'I': 'INDIA', 'J': 'JULIETT', 'K': 'KILO', 'L': 'LIMA',
-        'M': 'MIKE', 'N': 'NOVEMBER', 'O': 'OSCAR', 'P': 'PAPA', 'Q': 'QUEBEC', 'R': 'ROMEO',
-        'S': 'SIERRA', 'T': 'TANGO', 'U': 'UNIFORM', 'V': 'VICTOR', 'W': 'WHISKEY', 'X': 'X-RAY',
-        'Y': 'YANKEE', 'Z': 'ZULU'
-    };
-
-    // ================= MOTEUR =================
+    // --- MOTEUR ---
     
     function switchTab(id) {
         document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
@@ -457,42 +429,87 @@
         document.getElementById(id).classList.add('active');
         event.target.classList.add('active');
         
-        if(db[id]) {
+        if (id === 'nato') {
+            loadNatoQuestion(); // Charge le mode actuel
+        } else if (db[id]) {
             loadQuestion(id);
-        } else if (id === 'nato') {
-            loadQuestion('nato');
         }
+    }
+
+    // Gestion des modes NATO
+    function setNatoMode(mode) {
+        currentNatoMode = mode;
+        document.getElementById('btn-nato-letter').classList.toggle('active', mode === 'letter');
+        document.getElementById('btn-nato-meaning').classList.toggle('active', mode === 'meaning');
+        loadNatoQuestion();
     }
 
     function loadQuestion(cat) {
         const container = document.getElementById(`quiz-${cat}`);
         const qData = db[cat][Math.floor(Math.random() * db[cat].length)];
-        
-        let options = qData.options.map((opt, index) => {
-            return {
-                text: opt,
-                isCorrect: (index === qData.a)
-            };
-        });
+        renderQuizCard(container, qData, cat);
+    }
 
-        // Mélange
+    function loadNatoQuestion() {
+        const container = document.getElementById('quiz-nato');
+        const item = natoData[Math.floor(Math.random() * natoData.length)];
+        let qData = {};
+
+        if (currentNatoMode === 'letter') {
+            // MODE LETTRE : On montre le drapeau, on cherche le NOM (Alpha, Bravo...)
+            qData = {
+                img: item.img,
+                q: "Quel est ce pavillon ?",
+                info: `${item.name} : ${item.m}`,
+                a: 0 // La bonne réponse sera toujours à l'index 0 avant mélange
+            };
+            // Générer 2 mauvaises réponses au hasard
+            let others = natoData.filter(x => x.l !== item.l).sort(() => 0.5 - Math.random()).slice(0, 2);
+            qData.options = [item.name, others[0].name, others[1].name];
+
+        } else {
+            // MODE SIGNIFICATION : On montre le drapeau (ou le nom), on cherche la SIGNIFICATION
+            qData = {
+                img: item.img,
+                q: `Que signifie le pavillon ${item.name} ?`,
+                info: `${item.name} : ${item.m}`,
+                a: 0
+            };
+            let others = natoData.filter(x => x.l !== item.l).sort(() => 0.5 - Math.random()).slice(0, 2);
+            qData.options = [item.m, others[0].m, others[1].m];
+        }
+
+        renderQuizCard(container, qData, 'nato', true); // true = force refresh si nato
+    }
+
+    function renderQuizCard(container, qData, cat, isNato = false) {
+        // Préparation des options
+        let options = qData.options.map((opt, index) => {
+            return { text: opt, isCorrect: (index === qData.a) };
+        });
         options = options.sort(() => Math.random() - 0.5);
 
-        let imgClass = "quiz-image";
-        if(cat === 'nato') imgClass += " flag-quiz-img";
-        let imageHTML = qData.img ? `<img src="${qData.img}" class="${imgClass}" alt="Image" onerror="this.style.display='none';this.after('Image manquante')">` : '';
+        // Image handling
+        let imageHTML = '';
+        if (qData.img) {
+            let imgClass = cat === 'nato' ? 'quiz-image flag-img-large' : 'quiz-image';
+            imageHTML = `
+                <div class="quiz-image-container">
+                    <img src="${qData.img}" class="${imgClass}" alt="Image" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'color:#999\\'>Image manquante<br>${qData.img}</span>'">
+                </div>`;
+        }
 
         container.innerHTML = `
             <div class="question-card">
                 ${imageHTML}
                 <div class="question-text">${qData.q}</div>
                 <div class="options-grid">
-                    ${options.map((opt) => 
+                    ${options.map(opt => 
                         `<button class="opt-btn" onclick="check(this, ${opt.isCorrect}, '${qData.info.replace(/'/g, "\\'")}')">${opt.text}</button>`
                     ).join('')}
                 </div>
                 <div class="feedback-box"></div>
-                <button class="btn-next" style="display:none" onclick="loadQuestion('${cat}')">Question Suivante →</button>
+                <button class="btn-next" onclick="${isNato ? 'loadNatoQuestion()' : `loadQuestion('${cat}')`}">Question Suivante →</button>
             </div>
         `;
     }
@@ -501,37 +518,49 @@
         const card = btn.closest('.question-card');
         const feedback = card.querySelector('.feedback-box');
         
-        card.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+        card.querySelectorAll('.opt-btn').forEach(b => {
+            b.disabled = true;
+            if(b === btn && !isCorrect) {
+                b.style.background = "#ffebee";
+                b.style.borderColor = "#ffcdd2";
+                b.style.color = "#c62828";
+            }
+        });
 
         if(isCorrect) {
-            btn.style.background = "#d4edda"; 
-            btn.style.borderColor = "#28a745";
-            feedback.innerHTML = `<strong style="color:#155724; font-size:1.2rem;">✔ Bonne réponse !</strong><br><div style="margin-top:5px; color:#333;">${info}</div>`;
-            feedback.style.background = "#e9f7ef";
-            feedback.style.border = "1px solid #c3e6cb";
+            btn.style.background = "#e8f5e9";
+            btn.style.borderColor = "#a5d6a7";
+            btn.style.color = "#2e7d32";
+            feedback.innerHTML = `<strong style="color:#2e7d32;">✔ Bonne réponse !</strong><br>${info}`;
+            feedback.style.background = "#e8f5e9";
+            feedback.style.border = "1px solid #c8e6c9";
+            updateScore(10);
         } else {
-            btn.style.background = "#f8d7da"; 
-            btn.style.borderColor = "#dc3545";
-            feedback.innerHTML = `<strong style="color:#721c24; font-size:1.2rem;">✘ Raté...</strong><br><div style="margin-top:5px; color:#333;">${info}</div>`;
-            feedback.style.background = "#f8d7da";
-            feedback.style.border = "1px solid #f5c6cb";
+            feedback.innerHTML = `<strong style="color:#c62828;">✘ Incorrect.</strong><br>${info}`;
+            feedback.style.background = "#ffebee";
+            feedback.style.border = "1px solid #ffcdd2";
         }
+        
         feedback.style.display = 'block';
-        
-        // Auto-scroll léger vers le feedback si nécessaire
-        feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        
         card.querySelector('.btn-next').style.display = 'block';
+    }
+
+    function updateScore(points) {
+        currentScore += points;
+        document.getElementById('score-val').innerText = currentScore;
     }
 
     function translateNato(text) {
         const output = document.getElementById('nato-res');
-        if(!text.trim()) { output.innerHTML = ""; return; }
+        if(!text.trim()) { output.innerHTML = "<span style='color:#aaa; font-style:italic;'>Résultat...</span>"; return; }
         
         output.innerHTML = text.toUpperCase().split('').map(char => {
-            if (natoAlphabet[char]) {
-                const img = `<img src="images/${natoAlphabet[char]}" class="flag-icon-small">`;
-                return `<div class="nato-item">${img} ${natoNames[char]}</div>`;
+            let found = natoData.find(item => item.l === char);
+            if (found) {
+                return `<div class="nato-item">
+                            <img src="${found.img}" class="nato-flag-mini" onerror="this.style.display='none'">
+                            ${found.name}
+                        </div>`;
             } else if (char.match(/[0-9]/)) {
                  return `<div class="nato-item">${char}</div>`;
             }
@@ -545,4 +574,3 @@
 
 </body>
 </html>
-
