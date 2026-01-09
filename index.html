@@ -467,6 +467,10 @@
     let currentNatoMode = 'letter';
     let currentSacMode = 'homme'; 
 
+    // Pour la gestion des répétitions et des erreurs
+    let lastIndices = {};   // Mémorise la dernière question posée par catégorie
+    let retryQueues = {};   // File d'attente des mauvaises réponses par catégorie
+
     // --- DONNÉES NATO ---
     const natoData = [
         { l: "A", name: "ALFA", m: "J'ai un scaphandrier en plongée.", img: "images/flag_a.png" },
@@ -500,33 +504,16 @@
     // --- DONNÉES SAC ---
     const sacData = {
         homme: [
-            "Bâchi (avec pompon rouge)",
-            "Vareuse bleue (repassée)",
-            "Marinière (tricot rayé bleu/blanc)",
-            "Pantalon bleu marine (repassé)",
-            "Ceinturon blanc",
-            "Chaussettes noires",
-            "Guêtres",
-            "Chaussures noires (cirées)",
-            "Gants blancs",
-            "Insignes et décorations",
-            "Veste civile / Pull (pour après)",
-            "Barres céréalières (en cas de creux)"
+            "Bâchi (avec pompon rouge)", "Vareuse bleue (repassée)", "Marinière (tricot rayé bleu/blanc)",
+            "Pantalon bleu marine (repassé)", "Ceinturon blanc", "Chaussettes noires", "Guêtres",
+            "Chaussures noires (cirées)", "Gants blancs", "Insignes et décorations",
+            "Veste civile / Pull (pour après)", "Barres céréalières (en cas de creux)"
         ],
         femme: [
-            "Tricorne",
-            "Chemise blanche",
-            "Cravate noire",
-            "Vareuse bleue (repassée)",
-            "Pantalon bleu marine (repassé)",
-            "Ceinturon blanc",
-            "Chaussettes noires",
-            "Guêtres",
-            "Chaussures noires (cirées)",
-            "Gants blancs",
-            "Insignes et décorations",
-            "Matériel chignon (barrettes/pinces)",
-            "Veste civile / Pull (pour après)",
+            "Tricorne", "Chemise blanche", "Cravate noire", "Vareuse bleue (repassée)",
+            "Pantalon bleu marine (repassé)", "Ceinturon blanc", "Chaussettes noires", "Guêtres",
+            "Chaussures noires (cirées)", "Gants blancs", "Insignes et décorations",
+            "Matériel chignon (barrettes/pinces)", "Veste civile / Pull (pour après)",
             "Barres céréalières (en cas de creux)"
         ]
     };
@@ -618,6 +605,7 @@
         document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        
         // Hack pour activer le bouton de nav même si l'appel ne vient pas du clic direct
         if(event && event.target && event.target.tagName === 'BUTTON') {
              event.target.classList.add('active');
@@ -645,8 +633,39 @@
 
     function loadQuestion(cat) {
         const container = document.getElementById(`quiz-${cat}`);
-        const qData = db[cat][Math.floor(Math.random() * db[cat].length)];
-        renderQuizCard(container, qData, cat);
+        
+        // Initialisation si nécessaire
+        if (!retryQueues[cat]) retryQueues[cat] = [];
+        if (lastIndices[cat] === undefined) lastIndices[cat] = -1;
+
+        let poolSize = db[cat].length;
+        let index = -1;
+        let isRetry = false;
+
+        // 1. Tenter de rejouer une erreur (50% de chance si la file n'est pas vide)
+        if (retryQueues[cat].length > 0 && Math.random() < 0.5) {
+            // On regarde le premier candidat de la liste d'erreurs
+            let candidate = retryQueues[cat][0];
+            // Pour éviter la répétition immédiate (ex: j'ai faux, je reclique, on évite de remettre la même tout de suite)
+            if (candidate !== lastIndices[cat]) {
+                index = retryQueues[cat].shift(); // On prend l'erreur et on l'enlève de la file
+                isRetry = true;
+            }
+        }
+
+        // 2. Si pas de retry, tirage aléatoire avec protection anti-répétition immédiate
+        if (index === -1) {
+            do {
+                index = Math.floor(Math.random() * poolSize);
+            } while (index === lastIndices[cat] && poolSize > 1);
+        }
+
+        // Enregistrer l'index actuel
+        lastIndices[cat] = index;
+
+        const qData = db[cat][index];
+        // On passe 'index' et 'cat' à renderQuizCard pour pouvoir gérer l'erreur ensuite
+        renderQuizCard(container, qData, cat, false, index);
     }
 
     function loadNatoQuestion() {
@@ -680,7 +699,7 @@
         renderQuizCard(container, qData, 'nato', true);
     }
 
-    function renderQuizCard(container, qData, cat, isNato = false) {
+    function renderQuizCard(container, qData, cat, isNato = false, questionIndex = -1) {
         let options = qData.options.map((opt, index) => {
             return { text: opt, isCorrect: (index === qData.a) };
         });
@@ -696,6 +715,8 @@
         }
         
         const safeInfo = qData.info.replace(/'/g, "\\'");
+        // On sécurise cat aussi
+        const safeCat = cat ? cat : '';
 
         container.innerHTML = `
             <div class="question-card">
@@ -703,7 +724,7 @@
                 <div class="question-text">${qData.q}</div>
                 <div class="options-grid">
                     ${options.map(opt => 
-                        `<button class="opt-btn" onclick="check(this, ${opt.isCorrect}, '${safeInfo}')">${opt.text}</button>`
+                        `<button class="opt-btn" onclick="check(this, ${opt.isCorrect}, '${safeInfo}', '${safeCat}', ${questionIndex})">${opt.text}</button>`
                     ).join('')}
                 </div>
                 <div class="feedback-box"></div>
@@ -712,7 +733,7 @@
         `;
     }
 
-    function check(btn, isCorrect, info) {
+    function check(btn, isCorrect, info, cat, index) {
         const card = btn.closest('.question-card');
         const feedback = card.querySelector('.feedback-box');
         
@@ -737,6 +758,15 @@
             feedback.innerHTML = `<strong style="color:#c62828;">✘ Incorrect.</strong><br>${info}`;
             feedback.style.background = "#ffebee";
             feedback.style.border = "1px solid #ffcdd2";
+            
+            // LOGIQUE DE RÉVISION : Ajout à la file d'attente
+            if (cat && cat !== 'nato' && index !== -1) {
+                if (!retryQueues[cat]) retryQueues[cat] = [];
+                // On évite les doublons dans la file d'attente
+                if (!retryQueues[cat].includes(index)) {
+                    retryQueues[cat].push(index);
+                }
+            }
         }
         
         feedback.style.display = 'block';
