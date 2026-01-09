@@ -269,15 +269,25 @@
             padding-bottom: 8px;
         }
         
-        /* Style spécifique pour le Code du Marin */
-        .code-marin-text p {
-            margin: 0 0 10px 0;
+        /* Style spécifique pour le Code du Marin & Règles Sécu */
+        .text-block p {
+            margin: 0 0 12px 0;
             padding-left: 10px;
             border-left: 3px solid var(--gold);
         }
-        .code-marin-text strong {
+        .text-block strong {
             color: var(--navy-blue);
         }
+
+        /* Règles sécu specifique */
+        .secu-rule {
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .secu-rule:last-child { border-bottom: none; }
+        .secu-title { font-weight: bold; color: #d32f2f; display: block; margin-bottom: 4px; }
+        .secu-reason { display: block; font-style: italic; color: #555; font-size: 0.85rem; margin-top: 3px; }
 
         .checklist-container div:active { background-color: #f9f9f9; }
         .btn-reset { margin-top:15px; padding:12px; width:100%; background:#f1f1f1; border:none; border-radius:8px; color:#555; font-weight:bold; cursor: pointer; }
@@ -364,6 +374,33 @@
 
     <div id="famas" class="section-content">
         <h2>FAMAS G2</h2>
+
+        <div class="bonus-card" style="background: #fff3e0; border: 1px solid #ffe0b2;">
+            <div class="bonus-title" style="border-bottom-color:#ffe0b2;">⚠️ 4 Règles de Sécurité</div>
+            <div style="text-align: left; padding: 5px;">
+                
+                <div class="secu-rule">
+                    <span class="secu-title">1. Une arme doit toujours être considérée comme chargée.</span>
+                    <span class="secu-reason">👉 C'est la cause de tous les accidents.</span>
+                </div>
+
+                <div class="secu-rule">
+                    <span class="secu-title">2. Ne jamais pointer ou laisser pointer le canon d'une arme sur quelque chose que l'on ne veut pas détruire.</span>
+                    <span class="secu-reason">👉 C'est la cause de tous les accidents.</span>
+                </div>
+
+                <div class="secu-rule">
+                    <span class="secu-title">3. Garder l'index hors de la détente tant que les organes de visée ne sont pas sur l'objectif.</span>
+                    <span class="secu-reason">👉 Afin d'éviter les départs de coups dus à une crispation musculaire (mettre le doigt sur la détente est plus rapide que de prendre une visée).</span>
+                </div>
+
+                <div class="secu-rule">
+                    <span class="secu-title">4. Être sûr de son objectif et de son environnement.</span>
+                    <span class="secu-reason">👉 Afin d'éviter les dommages collatéraux et les tirs fratricides.</span>
+                </div>
+
+            </div>
+        </div>
         <div id="quiz-famas"></div>
     </div>
 
@@ -372,7 +409,7 @@
 
         <div class="bonus-card">
             <div class="bonus-title">📜 Code du Marin</div>
-            <div class="code-marin-text" style="font-size:0.9rem; line-height:1.4; color:#333; text-align:justify; max-height:250px; overflow-y:auto; padding:10px; background:#f9f9f9; border-radius:8px; border:1px solid #eee;">
+            <div class="text-block" style="font-size:0.9rem; line-height:1.4; color:#333; text-align:justify; max-height:250px; overflow-y:auto; padding:10px; background:#f9f9f9; border-radius:8px; border:1px solid #eee;">
                 <p><strong>Au service de la nation,</strong> je lui suis entièrement dévoué, en tout temps et en tout lieu.</p>
                 <p><strong>Déterminé,</strong> j'accomplis ma mission avec abnégation, si nécessaire au péril de ma vie.</p>
                 <p><strong>Conscient de la force dont je suis dépositaire,</strong> j'obéis aux ordres, dans le respect des lois, de l’éthique et des conventions internationales.</p>
@@ -415,7 +452,7 @@
 
         <div class="bonus-card" style="opacity: 0.7;">
             <div class="bonus-title">⚓ À venir...</div>
-            <p style="color:#666;">D'autres outils seront ajoutés ici (Sécurité, etc.)</p>
+            <p style="color:#666;">D'autres outils seront ajoutés ici (Matelotage, Sécurité, etc.)</p>
         </div>
     </div>
 </main>
@@ -790,7 +827,7 @@
         santiano: "C'est un fameux trois-mâts fin comme un oiseau\nHisse et ho, Santiano !\nDix-huit nœuds, quatre cent tonneaux\nJe suis fier d'y être matelot\n\n(Refrain)\nTiens bon la vague et tiens bon le vent\nHisse et ho, Santiano !\nSi Dieu veut toujours droit devant\nNous irons jusqu'à San Francisco\n\nJe pars pour de longs mois en laissant Margot\nHisse et ho, Santiano !\nD'y penser j'avais le cœur gros\nEn doublant les feux de Saint-Malo\n\n(Refrain)\n\nOn prétend que là-bas l'argent coule à flots\nHisse et ho, Santiano !\nOn trouve l'or au fond des ruisseaux\nJ'en ramènerai plusieurs lingots\n\n(Refrain)\n\nUn jour, je reviendrai chargé de cadeaux\nHisse et ho, Santiano !\nAu pays, j'irai voir Margot\nÀ son doigt, je passerai l'anneau\n\n(Refrain)",
         
         strasbourgeoise: "Petit papa voici la mi-carême,\nCar te voici déguisé en soldat.\nPetit papa dis-moi si c'est pour rire,\nOu pour faire peur aux tout petits enfants ?\n\n(Refrain)\nNon mon enfant je pars pour la patrie,\nC'est un devoir où tous les papas s'en vont,\nEmbrasse-moi petite fille chérie,\nJe rentrerai bien vite à la maison.\n\nDis-moi maman quelle est cette médaille,\nEt cette lettre qu'apporte le facteur ?\nDis-moi maman tu pleures et tu défailles,\nIls ont tué petit papa chéri.\n\n(Dernier couplet)\nLa neige tombe aux portes de la ville,\nLà est assis un enfant de Strasbourg.\nIl reste là malgré le froid la bise,\nIl reste là malgré le froid du jour.\nUn homme passe et à l'enfant il donne,\nUn peu d'argent, petit n'a plus de toit.\nSa mère est morte et son père est en France,\nIl n'a plus rien, plus de maison à soi.",
-                 };
+};
 
     function showChant(chantKey) {
         const display = document.getElementById('chant-display');
@@ -808,4 +845,3 @@
 
 </body>
 </html>
-
