@@ -467,9 +467,15 @@
     let currentNatoMode = 'letter';
     let currentSacMode = 'homme'; 
 
-    // Pour la gestion des répétitions et des erreurs
-    let lastIndices = {};   // Mémorise la dernière question posée par catégorie
-    let retryQueues = {};   // File d'attente des mauvaises réponses par catégorie
+    // --- SYSTÈME DE PIOCHE (DECK) ---
+    // decks[categorie] contiendra la liste des index mélangés (ex: [3, 0, 5, 2...])
+    let decks = {}; 
+    
+    // File d'attente des mauvaises réponses par catégorie
+    let retryQueues = {}; 
+    
+    // Mémorise la TOUTE dernière question posée (pour éviter le doublon immédiat lors d'un retry)
+    let lastIndices = {};
 
     // --- DONNÉES NATO ---
     const natoData = [
@@ -631,44 +637,62 @@
         loadNatoQuestion();
     }
 
+    // Fonction de mélange (Fisher-Yates)
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
     function loadQuestion(cat) {
         const container = document.getElementById(`quiz-${cat}`);
         
         // Initialisation si nécessaire
         if (!retryQueues[cat]) retryQueues[cat] = [];
-        if (lastIndices[cat] === undefined) lastIndices[cat] = -1;
+        if (!decks[cat]) decks[cat] = [];
 
-        let poolSize = db[cat].length;
         let index = -1;
-        let isRetry = false;
-
-        // 1. Tenter de rejouer une erreur (50% de chance si la file n'est pas vide)
+        
+        // 1. GESTION DES ERREURS (Priorité : 1 chance sur 2 si file non vide)
+        // On vérifie qu'on ne repose pas immédiatement la question qu'on vient de rater/voir
         if (retryQueues[cat].length > 0 && Math.random() < 0.5) {
-            // On regarde le premier candidat de la liste d'erreurs
             let candidate = retryQueues[cat][0];
-            // Pour éviter la répétition immédiate (ex: j'ai faux, je reclique, on évite de remettre la même tout de suite)
             if (candidate !== lastIndices[cat]) {
-                index = retryQueues[cat].shift(); // On prend l'erreur et on l'enlève de la file
-                isRetry = true;
+                index = retryQueues[cat].shift();
             }
         }
 
-        // 2. Si pas de retry, tirage aléatoire avec protection anti-répétition immédiate
+        // 2. GESTION DU DECK (Pioche)
         if (index === -1) {
-            do {
-                index = Math.floor(Math.random() * poolSize);
-            } while (index === lastIndices[cat] && poolSize > 1);
+            // Si le deck est vide, on le remplit et on mélange
+            if (decks[cat].length === 0) {
+                // Créer un tableau [0, 1, 2, ..., n]
+                decks[cat] = Array.from({length: db[cat].length}, (_, i) => i);
+                shuffleArray(decks[cat]);
+                
+                // Anti-doublon à la coupe : Si la nouvelle première carte est la même que la dernière vue
+                if (decks[cat][0] === lastIndices[cat] && decks[cat].length > 1) {
+                    // On met la première carte à la fin
+                    decks[cat].push(decks[cat].shift());
+                }
+            }
+            // On tire la carte du dessus
+            index = decks[cat].pop();
         }
 
-        // Enregistrer l'index actuel
+        // Mémorisation pour l'anti-répétition immédiate
         lastIndices[cat] = index;
 
         const qData = db[cat][index];
-        // On passe 'index' et 'cat' à renderQuizCard pour pouvoir gérer l'erreur ensuite
         renderQuizCard(container, qData, cat, false, index);
     }
 
     function loadNatoQuestion() {
+        // Le NATO a beaucoup de lettres, le random simple passe encore, 
+        // mais on pourrait appliquer le deck ici aussi. Pour l'instant on garde le random simple
+        // car le mode switch entre lettre et signification.
         const container = document.getElementById('quiz-nato');
         const item = natoData[Math.floor(Math.random() * natoData.length)];
         let qData = {};
@@ -715,7 +739,6 @@
         }
         
         const safeInfo = qData.info.replace(/'/g, "\\'");
-        // On sécurise cat aussi
         const safeCat = cat ? cat : '';
 
         container.innerHTML = `
