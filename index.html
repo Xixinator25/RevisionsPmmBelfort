@@ -591,17 +591,111 @@
         ],
 
         famas: [
-            { img: "images/famas_ensemble_mobile.jpg", q: "Quelle est cette pièce centrale ?", options: ["L'ensemble mobile", "La culasse", "Le percuteur"], a: 0, info: "L'ensemble mobile." },
-            { img: "images/famas_chargeur.jpg", q: "Contenance du chargeur (G2) ?", options: ["30 cartouches", "25 cartouches", "20 cartouches"], a: 0, info: "30 cartouches (Standard OTAN)." },
-            { img: "images/famas_selecteur.jpg", q: "Position '1' sur le sélecteur ?", options: ["Semi-auto (Coup par coup)", "Rafale", "Sûreté"], a: 0, info: "1 = Tir en coup par coup." },
-            { img: "images/famas_general.jpg", q: "Quel est ce modèle ?", options: ["FAMAS G2", "FAMAS F1", "HK 416"], a: 0, info: "FAMAS G2 (Pontet large)." },
-            { img: "images/famas_boitier.jpg", q: "Nom de cette pièce ?", options: ["Boîtier de mécanisme", "Ensemble mobile", "PGM"], a: 0, info: "Boîtier de Mécanisme (Pièce de sécurité)." },
-            { img: "images/famas_limiteur.jpg", q: "À quoi sert la commande '0' ou '3' ?", options: ["Limiteur de rafale", "Sélecteur de tir", "Sûreté"], a: 0, info: "Limiteur de Rafale (0=Libre, 3=Trois coups)." },
-            { img: "images/famas_poignee.jpg", q: "Identifiez cet ensemble :", options: ["Poignée Garde-Main (PGM)", "Crosse", "Canon"], a: 0, info: "Poignée Garde-Main." },
-            { img: "images/famas_crosse.jpg", q: "Pièce mobile pour viser sur la crosse ?", options: ["L'appui-joue", "L'amortisseur", "La fenêtre d'éjection"], a: 0, info: "L'appui-joue." },
-            { q: "Portée pratique du FAMAS G2 ?", options: ["300 m", "200 m", "600 m"], a: 0, info: "300 mètres." },
-            { q: "Cadence de tir théorique ?", options: ["1000 coups/mn", "600 coups/mn", "100 coups/mn"], a: 0, info: "1000 à 1100 coups/minute." },
-            { q: "Grenades tirées par le FAMAS ?", options: ["Mixtes (AP/AV)", "Fumigènes", "De 120mm"], a: 0, info: "Grenades Mixtes (Anti-Personnel / Anti-Véhicule)." }
+            // --- GÉNÉRALITÉS & DONNÉES NUMÉRIQUES (Source: PDF P.3) ---
+            { 
+                q: "Quel est le calibre du FAMAS ?", 
+                options: ["5,56 mm OTAN", "7,62 mm", "9 mm Parabellum"], 
+                a: 0, 
+                info: "Calibre 5,56 mm OTAN[cite: 19]." 
+            },
+            { 
+                q: "Quelle est la contenance du chargeur du FAMAS G2 ?", 
+                options: ["30 cartouches", "25 cartouches", "20 cartouches"], 
+                a: 0, 
+                info: "Le G2 a un chargeur courbe de 30 cartouches (Le F1 en a 25 droits)[cite: 22]." 
+            },
+            { 
+                q: "Quelle est la cadence de tir THÉORIQUE du FAMAS G2 ?", 
+                options: ["1000 coups/mn", "600 coups/mn", "100 coups/mn"], 
+                a: 0, 
+                info: "G2 = 1000 à 1100 c/mn. (Le F1 est plus lent ~600 c/mn) [cite: 19]." 
+            },
+            { 
+                q: "Quelle est la cadence de tir PRATIQUE du FAMAS ?", 
+                options: ["100 coups/mn", "300 coups/mn", "1000 coups/mn"], 
+                a: 0, 
+                info: "Cadence pratique : 100 coups/mn[cite: 19]." 
+            },
+            { 
+                q: "Quelle est la portée PRATIQUE du FAMAS ?", 
+                options: ["300 m", "200 m", "600 m"], 
+                a: 0, 
+                info: "Portée pratique : 300 m (Portée max : 2500 m)[cite: 19]." 
+            },
+            { 
+                q: "Quel est le poids du FAMAS G2 ?", 
+                options: ["3,750 kg", "3,200 kg", "4,100 kg"], 
+                a: 0, 
+                info: "3,750 kg (sans chargeur)[cite: 19]." 
+            },
+
+            // --- SÉCURITÉ & MÉCANIQUE (Source: PDF P.3, 12, 17) ---
+            { 
+                q: "Quelle est la pièce de SÉCURITÉ de l'arme ?", 
+                options: ["Le boîtier de mécanisme", "L'ensemble mobile", "La culasse"], 
+                a: 0, 
+                info: "Le boîtier de mécanisme (qui contient le limiteur) est la pièce de sécurité[cite: 23, 24]." 
+            },
+            { 
+                img: "images/famas_selecteur.jpg", // À créer depuis le PDF P.17
+                q: "Sélecteur de tir : Que signifie la position '1' ?", 
+                options: ["Coup par coup", "Rafale", "Sûreté"], 
+                a: 0, 
+                info: "1 = Tir en semi-automatique (Coup par coup)[cite: 131, 132]." 
+            },
+            { 
+                img: "images/famas_limiteur.jpg", // À créer depuis le PDF P.17
+                q: "Limiteur de rafale (sous la crosse) : Que signifie '0' ?", 
+                options: ["Rafale libre", "Rafale de 3 coups", "Sûreté"], 
+                a: 0, 
+                info: "0 = Rafale libre (tant qu'on appuie)[cite: 135, 139]." 
+            },
+            { 
+                q: "Limiteur de rafale : Que signifie la position '3' ?", 
+                options: ["Rafale limitée (3 coups)", "Rafale libre", "3 cartouches restantes"], 
+                a: 0, 
+                info: "3 = Rafale limitée à 3 coups[cite: 129, 138]." 
+            },
+
+            // --- MUNITIONS & GRENADES (Source: PDF P.4, 20) ---
+            { 
+                q: "Comment identifie-t-on une balle Traçante ?", 
+                options: ["Pointe rouge / Balle 'T'", "Pointe verte", "Aucune couleur / Balle 'O'"], 
+                a: 0, 
+                info: "Balle 'T' (Traceuse) = Pointe colorée[cite: 38]." 
+            },
+            { 
+                q: "Que signifie 'Balle O' ?", 
+                options: ["Balle Ordinaire", "Balle à Blanc", "Balle d'Opération"], 
+                a: 0, 
+                info: "O = Balle Ordinaire[cite: 37]." 
+            },
+            { 
+                q: "Le FAMAS peut-il tirer des grenades ?", 
+                options: ["Oui (APAV 40mm & AC 58mm)", "Non, jamais", "Seulement des fumigènes"], 
+                a: 0, 
+                info: "Oui, tir vertical ou tendu (APAV 40mm et AC 58mm)[cite: 16, 145, 153]." 
+            },
+
+            // --- ORGANES & MANIPULATION (Source: PDF P.6, 11, 15) ---
+            { 
+                q: "Pour un gaucher, de quel côté monter l'extracteur ?", 
+                options: ["À gauche", "À droite", "Au centre"], 
+                a: 0, 
+                info: "L'éjection se fait du côté de l'extracteur. Gaucher = Éjection à gauche = Extracteur à gauche[cite: 122, 126]." 
+            },
+            { 
+                q: "Où se trouve l'alidade de tir ?", 
+                options: ["Sur la poignée garde-main", "Sur le canon", "Dans la crosse"], 
+                a: 0, 
+                info: "La poignée garde-main porte les alidades de tir vertical et tendu[cite: 94, 95, 96]." 
+            },
+            { 
+                q: "De quoi est composé l'ensemble mobile ?", 
+                options: ["Masse add., Culasse, LAI, Percuteur", "Culasse, Boîtier, Ressort", "Canon, Culasse, Crosse"], 
+                a: 0, 
+                info: "Masse additionnelle, Culasse, Levier Amplificateur d'Inertie, Percuteur[cite: 61, 62, 63, 64, 65]." 
+            }
         ]
     };
 
